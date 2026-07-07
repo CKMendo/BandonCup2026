@@ -1,0 +1,3239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bandon Cup 2026</title>
+<style>
+  :root{
+    --paper:#F6F2E7;
+    --paper-alt:#EDE6D3;
+    --ink:#22281F;
+    --ink-soft:#5B6355;
+    --line:#D3C7A6;
+    --green:#2E4A38;
+    --green-dark:#1C2F22;
+    --gold:#C0913D;
+    --rust:#A5482C;
+    --white:#FFFDF7;
+    --font-display: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    --radius: 10px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;background:var(--green-dark);}
+  body{ font-family:var(--font-body); color:var(--ink); background:var(--green-dark); min-height:100vh; display:flex; justify-content:center; }
+  #shell{ width:100%; max-width:560px; background:var(--paper); min-height:100vh; display:flex; flex-direction:column; position:relative; }
+  header{ background:linear-gradient(180deg,var(--green) 0%, var(--green-dark) 100%); color:var(--white); padding:18px 18px 14px; border-bottom:3px solid var(--gold); }
+  header .eyebrow{ font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin:0 0 2px; }
+  header h1{ font-family:var(--font-display); font-size:26px; margin:0; font-weight:700; letter-spacing:.01em; }
+  header .sub{ font-size:12.5px; color:#D9DFCE; margin-top:4px; }
+  #headerControls{ margin-top:10px; gap:8px; flex-wrap:wrap; }
+  .hbtn{ font-size:11.5px; padding:6px 10px; border-radius:20px; border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.08); color:var(--white); cursor:pointer; }
+  .hbtn.locked{ border-color:var(--gold); color:var(--gold); }
+  #content{ flex:1; padding:14px 14px 90px; overflow-y:auto; }
+  nav.tabbar{ position:sticky; bottom:0; display:flex; background:var(--green-dark); border-top:3px solid var(--gold); }
+  nav.tabbar button{ flex:1; background:none; border:none; color:#B9C2AC; font-family:var(--font-body); font-size:11.5px; letter-spacing:.03em; padding:11px 4px 9px; cursor:pointer; }
+  nav.tabbar button .ic{display:block;font-size:18px;margin-bottom:2px;}
+  nav.tabbar button.active{color:var(--white);}
+  nav.tabbar button.active .ic{color:var(--gold);}
+  h2.section-title{ font-family:var(--font-display); font-size:19px; margin:4px 0 10px; color:var(--green-dark); border-bottom:2px solid var(--line); padding-bottom:6px; }
+  .card{ background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:14px; margin-bottom:12px; }
+  .muted{color:var(--ink-soft); font-size:12.5px;}
+  .flex{display:flex; align-items:center;}
+  .between{justify-content:space-between;}
+  .gap8{gap:8px;}
+  .badge{ display:inline-block; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.04em; padding:2px 7px; border-radius:20px; color:var(--white); }
+  .badge.A{background:var(--green);}
+  .badge.B{background:var(--rust);}
+  .badge.short{background:var(--gold); color:var(--green-dark);}
+  .badge.full{background:var(--ink-soft);}
+  .badge.verified{background:#3C6E4C;}
+  .badge.unverified{background:var(--rust);}
+  .btn{ font-family:var(--font-body); font-size:13px; border:1px solid var(--green); background:var(--green); color:var(--white); padding:9px 14px; border-radius:8px; cursor:pointer; }
+  .btn.secondary{background:transparent; color:var(--green); }
+  .btn.rust{background:var(--rust); border-color:var(--rust); color:var(--white);}
+  .btn.gold{background:var(--gold); border-color:var(--gold); color:var(--green-dark); font-weight:600;}
+  .btn.small{padding:6px 10px; font-size:12px;}
+  .btn:disabled{opacity:.4; cursor:not-allowed;}
+  input[type=number], input[type=text], input[type=email], input[type=tel], select, textarea{
+    font-family:var(--font-mono); font-size:14px; border:1px solid var(--line); border-radius:6px;
+    padding:6px 8px; background:var(--paper); color:var(--ink); width:100%;
+  }
+  input:disabled, select:disabled, textarea:disabled{ opacity:.55; }
+  label.field{display:block; font-size:11px; color:var(--ink-soft); margin:8px 0 3px; text-transform:uppercase; letter-spacing:.04em;}
+  table{width:100%; border-collapse:collapse;}
+  th,td{padding:6px 5px; text-align:center; font-size:12.5px; border-bottom:1px solid var(--line);}
+  th{font-family:var(--font-mono); font-size:10.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em;}
+  td.name{text-align:left; font-family:var(--font-body); font-weight:600;}
+  .lead-row{background:var(--paper-alt);}
+  .skins-row{cursor:pointer;}
+  .skins-row .chev{color:var(--line); font-size:16px;}
+  .round-list-item{ display:flex; align-items:center; justify-content:space-between; padding:12px 4px; border-bottom:1px solid var(--line); cursor:pointer; }
+  .round-list-item:last-child{border-bottom:none;}
+  .round-list-item .meta{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+  .round-list-item .course{font-family:var(--font-display); font-size:16.5px; color:var(--green-dark);}
+  .chev{color:var(--line); font-size:20px;}
+  .player-chip{ padding:9px 6px; border-radius:8px; text-align:center; cursor:pointer; border:1.5px solid var(--line); font-size:12.5px; font-weight:600; }
+  .player-chip.A{border-color:var(--green);}
+  .player-chip.B{border-color:var(--rust);}
+  .player-chip.done{background:var(--paper-alt);}
+  .hole-chip.done{background:var(--green); color:var(--white); border-color:var(--green);}
+  .hole-chip.needs-ctp{background:var(--gold); color:var(--green-dark); border-color:var(--gold); font-weight:700;}
+  .hole-chip.push{background:var(--paper-alt); color:var(--ink-soft); text-decoration:line-through;}
+  .hole-chip.partial{border-style:dashed; border-color:var(--gold);}
+  .cat-row{ padding:10px 0; border-bottom:1px dashed var(--line); }
+  .cat-row-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .cat-name{ font-weight:700; font-size:14px; }
+  .cat-buttons{ display:flex; gap:6px; }
+  .catBtn{ flex:1; padding:9px 4px; border-radius:8px; border:1.5px solid var(--line); background:var(--paper); font-size:12.5px; font-weight:600; cursor:pointer; text-align:center; }
+  .catBtn.birdie.sel{ background:var(--gold); border-color:var(--gold); color:var(--green-dark); }
+  .catBtn.par.sel{ background:var(--green); border-color:var(--green); color:var(--white); }
+  .catBtn.bogey.sel{ background:var(--ink-soft); border-color:var(--ink-soft); color:var(--white); }
+  .ctp-box{ background:var(--paper-alt); border:1.5px dashed var(--gold); border-radius:10px; padding:12px; margin:14px 0; }
+  .ctp-buttons{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+  .ctpBtn{ padding:8px 14px; border-radius:20px; border:1.5px solid var(--gold); background:var(--paper); font-size:13px; font-weight:600; cursor:pointer; }
+  .ctpBtn.sel{ background:var(--gold); color:var(--green-dark); }
+  .stakes-badge{ display:inline-block; background:var(--green); color:var(--white); font-family:var(--font-mono); font-size:12px; padding:4px 10px; border-radius:20px; margin-bottom:10px; }
+  .hole-result-banner{ border-radius:10px; padding:12px; margin:12px 0; font-size:14px; }
+  .hole-result-banner.win{ background:var(--paper-alt); border:1px solid var(--green); }
+  .hole-result-banner.wait{ background:#FBF0DE; border:1px solid var(--gold); }
+  .hole-result-banner.push{ background:var(--paper-alt); border:1px solid var(--line); color:var(--ink-soft); }
+  .grid8{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
+  .banner{ background:var(--green); color:var(--white); border-radius:var(--radius); padding:16px; margin-bottom:14px; text-align:center; }
+  .banner .score{font-family:var(--font-display); font-size:30px; margin:2px 0;}
+  .banner .score span{color:var(--gold);}
+  .toast{ position:fixed; bottom:70px; left:50%; transform:translateX(-50%); background:var(--ink); color:var(--white); padding:8px 16px; border-radius:20px; font-size:12.5px; z-index:99; opacity:0; pointer-events:none; transition:opacity .25s; }
+  .toast.show{opacity:1;}
+  .collapsible summary{cursor:pointer; font-size:12.5px; color:var(--green); font-weight:600; padding:6px 0;}
+  .warn{ background:#FBF0DE; border:1px solid var(--gold); color:#6B4A16; border-radius:8px; padding:8px 10px; font-size:11.5px; margin:8px 0; }
+  .center{text-align:center;}
+  .loading-screen{ position:fixed; inset:0; background:var(--green-dark); color:var(--white); display:flex; align-items:center; justify-content:center; flex-direction:column; z-index:200; font-family:var(--font-display); font-size:15px; gap:10px; }
+  .skins-hole{display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed var(--line); font-size:13px;}
+  .progress-sticky{ position:sticky; top:0; z-index:10; background:var(--paper); padding:6px 0 4px; margin-bottom:2px; }
+  .progress-wrap{ height:8px; background:var(--line); border-radius:6px; overflow:hidden; }
+  .progress-fill{ height:100%; transition:width .2s ease; }
+  .progress-label{ font-size:11px; color:var(--ink-soft); text-align:right; margin-top:3px; }
+  .hole-block{padding:9px 0; border-bottom:1px dashed var(--line);}
+  .hole-block.hole-next{ background:var(--paper-alt); border-radius:8px; padding-left:8px; padding-right:8px; margin:0 -8px; }
+  .badge.gold-badge{ background:var(--gold); color:var(--green-dark); font-weight:700; }
+  .hole-head{display:flex; align-items:center; gap:8px; margin-bottom:7px; justify-content:space-between;}
+  .hole-head .hleft{display:flex; align-items:center; gap:8px;}
+  .hnum{font-family:var(--font-display); font-size:17px; color:var(--green-dark); min-width:20px;}
+  .hpar{font-family:var(--font-mono); font-size:11px; color:var(--ink-soft);}
+  .dot{color:var(--gold); font-size:14px; line-height:1;}
+  .btnrow{display:flex; flex-wrap:wrap; gap:6px;}
+  .scoreBtn{ display:flex; flex-direction:column; align-items:center; justify-content:center; width:44px; height:44px; border-radius:8px; border:1.5px solid var(--line); background:var(--paper); cursor:pointer; flex-shrink:0; }
+  .scoreBtn .sv{font-family:var(--font-display); font-size:16px; font-weight:700; color:var(--ink);}
+  .scoreBtn .sl{font-size:7.5px; text-transform:uppercase; color:var(--ink-soft); letter-spacing:.02em;}
+  .scoreBtn.sel{background:var(--green); border-color:var(--green);}
+  .scoreBtn.sel .sv, .scoreBtn.sel .sl{color:var(--white);}
+  .scoreBtn.more{background:var(--paper-alt);}
+  .out-in{ display:flex; justify-content:space-between; padding:8px 0; font-family:var(--font-mono); font-weight:700; font-size:13px; color:var(--green-dark); border-top:2px solid var(--green); border-bottom:2px solid var(--green); margin:4px 0; }
+  .tee-select-row{display:flex; align-items:center; gap:8px; margin:8px 0 12px;}
+  .tee-select-row select{flex:1;}
+  .tee-row{display:grid; grid-template-columns:1.4fr 1fr 1fr 30px; gap:6px; align-items:center; margin-bottom:6px;}
+  #updateBanner{ position:sticky; top:0; z-index:200; background:var(--gold); color:var(--green-dark); text-align:center; padding:10px 14px; font-weight:700; font-size:13px; cursor:pointer; letter-spacing:.02em; }
+  #updateBanner:active{ opacity:.85; }
+  #teeModalOverlay, #shareModalOverlay, #importModalOverlay, #logModalOverlay, #handicapModalOverlay, #publishModalOverlay{ position:fixed; inset:0; background:rgba(20,32,23,.6); display:none; align-items:flex-end; justify-content:center; z-index:150; }
+  .flag-row td{ background:#FDEDE8; }
+  .plaque{ position:relative; background:linear-gradient(135deg, #f4ecd4, #e6dabd); border:1px solid var(--gold); border-radius:10px; padding:16px 18px; margin-top:12px; box-shadow: inset 0 1px 0 rgba(255,255,255,.7), inset 0 -3px 6px rgba(0,0,0,.12), 0 1px 3px rgba(0,0,0,.15); }
+  .plaque h3{ font-family:var(--font-display); letter-spacing:.05em; text-transform:uppercase; font-size:12.5px; color:var(--green); margin:0 0 8px; text-shadow:0 1px 0 rgba(255,255,255,.6); }
+  .plaque p{ text-shadow:0 1px 0 rgba(255,255,255,.4); }
+  .log-entry{ padding:8px 0; border-bottom:1px solid var(--line); font-size:12.5px; }
+  .log-entry:last-child{ border-bottom:none; }
+  .log-entry .log-ts{ color:var(--ink-soft); font-size:10.5px; text-transform:uppercase; letter-spacing:.03em; margin-bottom:2px; }
+  .log-tag{ display:inline-block; font-size:9.5px; text-transform:uppercase; letter-spacing:.03em; padding:1px 6px; border-radius:8px; background:var(--paper-alt); margin-right:6px; }
+  .log-date-heading{ font-family:var(--font-display); font-size:13px; margin:14px 0 4px; color:var(--green); }
+  .log-date-heading:first-child{ margin-top:0; }
+  .modal-card{ background:var(--white); width:100%; max-width:560px; border-radius:16px 16px 0 0; padding:18px 18px 24px; border-top:3px solid var(--gold); max-height:82vh; overflow-y:auto; }
+  .spinner{ width:28px; height:28px; border:3px solid var(--line); border-top-color:var(--green); border-radius:50%; margin:0 auto; animation:spin .8s linear infinite; }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .tee-pop-btn{ display:inline-flex; align-items:center; gap:5px; background:var(--paper-alt); border:1px solid var(--gold); color:#6B4A16; font-size:11.5px; padding:6px 10px; border-radius:20px; cursor:pointer; margin-bottom:8px; }
+  .lockbar{ background:var(--paper-alt); border:1px dashed var(--rust); border-radius:8px; padding:10px; font-size:12.5px; margin-bottom:12px; text-align:center; color:#6B4A16; }
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="updateBanner" style="display:none;"></div>
+  <header>
+    <p class="eyebrow">Aug 27&ndash;31, 2026 &middot; Bandon Dunes</p>
+    <h1>The Bandon Cup</h1>
+    <p class="sub" id="headerSub2">8 players &middot; 5 championship rounds &middot; 3 short-course sessions</p>
+    <div class="flex" id="headerControls"></div>
+  </header>
+  <div id="content"></div>
+  <nav class="tabbar" id="tabbar">
+    <button data-tab="leaderboard"><span class="ic">&#127942;</span>Leaderboard</button>
+    <button data-tab="rounds"><span class="ic">&#9971;</span>Rounds</button>
+    <button data-tab="players"><span class="ic">&#128101;</span>Players</button>
+    <button data-tab="rules"><span class="ic">&#128220;</span>Rules</button>
+    <button data-tab="tiebreaker" id="tiebreakerTabBtn" style="display:none;"><span class="ic">&#9876;&#65039;</span>Tie-Break</button>
+  </nav>
+</div>
+<div class="toast" id="toast"></div>
+<div class="loading-screen" id="loadingScreen">Setting up the scorecard&hellip;</div>
+<div id="teeModalOverlay"></div>
+<div id="shareModalOverlay"></div>
+<div id="importModalOverlay"></div>
+<div id="logModalOverlay"></div>
+<div id="handicapModalOverlay"></div>
+<div id="publishModalOverlay"></div>
+
+<script>
+/* ---------------- DATA MODEL ---------------- */
+/* ---------------- SHARED-LINK SYNC (optional) ----------------
+   Uses jsonblob.com — a free public JSON store that needs zero signup or setup.
+   The first time "Publish Update" is tapped, a blob is created automatically and its ID is
+   remembered on this device; every publish after that just updates the same blob. The
+   shareable link is this same page's URL with ?view=<blobId> on the end — anyone who opens
+   that link is a read-only viewer, regardless of what device or PIN state they're on. This
+   device (opened with no ?view= param) is always the one true editable copy. */
+const CLOUD_API = 'https://jsonblob.com/api/jsonBlob';
+
+const LS_KEYS = { players:'bandoncup_players', rounds:'bandoncup_rounds', scores:'bandoncup_scores', pin:'bandoncup_pin', scheduleVersion:'bandoncup_schedule_version', auditLog:'bandoncup_auditlog', textScale:'bandoncup_textscale', teamsFinalized:'bandoncup_teams_finalized', handicapAlertDismissed:'bandoncup_handicap_alert_dismissed', publishVersion:'bandoncup_publish_version', cloudBlobId:'bandoncup_cloud_blob_id' };
+
+let state = {
+  tab: 'leaderboard',
+  players: null,
+  rounds: null,
+  scores: null,
+  auditLog: null,
+  textScale: 'normal',
+  teamsFinalized: false,
+  handicapAlertDismissedKey: null,
+  handicapModal: null,
+  viewerDisplayedVersion: null,
+  updateBannerVisible: false,
+  publishing: false,
+  viewOnlyMode: false,
+  viewBlobId: null,
+  cloudBlobId: null,
+  publishModal: null,
+  activeRoundId: null,
+  activePlayerId: null,
+  activeHoleIndex: null,
+  teeModal: null,
+  shareModal: null,
+  importModal: null,
+  logModal: null,
+  locked: true,
+  storageOk: true,
+};
+
+function defaultPlayers(){
+  return [
+    { id:'neal',    name:'Neal',    team:'A', index:5.5,  preferredTee:'Green',  indexHistory:[], email:'nbpatel1015@gmail.com',        phone:'6613195205' },
+    { id:'chet',    name:'Chet',    team:'A', index:8.7,  preferredTee:'Green',  indexHistory:[], email:'ckm.endo@gmail.com',           phone:'7142224992' },
+    { id:'raudel',  name:'Raudel',  team:'A', index:12.0, preferredTee:'Gold',   indexHistory:[], email:'raudelsandoval86@gmail.com',   phone:'6575819076' },
+    { id:'vilmer',  name:'Vilmer',  team:'A', index:16.5, preferredTee:'Orange', indexHistory:[], email:'vilmer.villaverde@gmail.com',  phone:'5629223916' },
+    { id:'hany',    name:'Hany',    team:'B', index:6.3,  preferredTee:'Green',  indexHistory:[], email:'h.elkordy@comcast.net',        phone:'2063993068' },
+    { id:'hiten',   name:'Hiten',   team:'B', index:8.2,  preferredTee:'Green',  indexHistory:[], email:'hitena1978@yahoo.com',         phone:'7147131767' },
+    { id:'hitesh',  name:'Hitesh',  team:'B', index:12.8, preferredTee:'Gold',   indexHistory:[], email:'drhpatel@icloud.com',          phone:'7146243725' },
+    { id:'vinny',   name:'Vinodh',  team:'B', index:15.3, preferredTee:'Gold',   indexHistory:[], email:'vinny.rapur@gmail.com',        phone:'9492965795' },
+  ];
+}
+const KNOWN_CONTACTS = {
+  neal:   { email:'nbpatel1015@gmail.com',       phone:'6613195205' },
+  chet:   { email:'ckm.endo@gmail.com',          phone:'7142224992' },
+  raudel: { email:'raudelsandoval86@gmail.com',  phone:'6575819076' },
+  vilmer: { email:'vilmer.villaverde@gmail.com', phone:'5629223916' },
+  hany:   { email:'h.elkordy@comcast.net',       phone:'2063993068' },
+  hiten:  { email:'hitena1978@yahoo.com',        phone:'7147131767' },
+  hitesh: { email:'drhpatel@icloud.com',         phone:'7146243725' },
+  vinny:  { email:'vinny.rapur@gmail.com',       phone:'9492965795' },
+};
+function seedKnownContacts(){
+  let changed = false;
+  state.players.forEach(p=>{
+    const c = KNOWN_CONTACTS[p.id];
+    if(!c) return;
+    if(!p.email){ p.email = c.email; changed = true; }
+    if(!p.phone){ p.phone = c.phone; changed = true; }
+  });
+  if(changed) savePlayers();
+}
+function seedBuyIns(){
+  let changed = false;
+  state.rounds.forEach(rc=>{
+    if(rc.type==='full' && (rc.buyIn===undefined || rc.buyIn===null)){ rc.buyIn = 10; changed = true; }
+  });
+  if(changed) saveRounds();
+}
+function renamePlayer(id, newName){
+  const p = getPlayer(id);
+  if(p && p.name !== newName){ p.name = newName; savePlayers(); }
+}
+function defaultHolePars(holes, totalPar){
+  let arr = Array(holes).fill(4);
+  let diff = totalPar - 4*holes;
+  let i = 0;
+  while(diff < 0 && i < holes){ arr[holes-1-i] = 3; diff++; i++; }
+  i = 0;
+  while(diff > 0 && i < holes){ arr[i] = 5; diff--; i++; }
+  return arr;
+}
+function defaultStrokeIndex(holes){ return Array.from({length:holes}, (_,i)=> i+1); }
+
+function defaultRounds(){
+  const mk = (id,date,time,course,type,holes,par,tees,counts,holePars,strokeIndex,verified)=>({
+    id,date,time,course,type,holes,par,tees,counts,
+    holePars: holePars || defaultHolePars(holes,par),
+    strokeIndex: strokeIndex || defaultStrokeIndex(holes),
+    verified: !!verified,
+    buyIn: type==='full' ? 10 : undefined,
+  });
+  return [
+    mk('oldmac','Thu 8/27','3:30 PM','Old Macdonald','full',18,71,
+      [{name:'Black',rating:74.4,slope:131},{name:'Green',rating:71.6,slope:125},{name:'Gold',rating:68.0,slope:116},{name:'Blue',rating:70.1,slope:117}],
+      true, [4,3,4,4,3,5,4,3,4, 4,4,3,4,4,5,4,5,4], [9,13,7,1,17,3,11,15,5, 10,4,16,18,14,12,2,6,8], true),
+    mk('trails','Fri 8/28','7:20 AM','Bandon Trails','full',18,71,
+      [{name:'Black',rating:73.6,slope:130},{name:'Green',rating:71.1,slope:129},{name:'Gold',rating:68.7,slope:122},{name:'Orange',rating:66.1,slope:117},{name:'Royal Blue',rating:61.2,slope:105}],
+      true, null, null, false),
+    mk('pacific','Fri 8/28','1:40 PM','Pacific Dunes','full',18,71,
+      [{name:'Resort',rating:70.9,slope:131}], true, null, null, false),
+    mk('sheep','Sat 8/29','9:40 AM','Sheep Ranch','full',18,71,
+      [{name:'Resort',rating:71.0,slope:121}], true, null, null, false),
+    mk('preserve','Sat 8/29','4:45 PM','Bandon Preserve','short',13,36, [], false, null, null, false),
+    mk('banddunes','Sun 8/30','8:40 AM','Bandon Dunes','full',18,72,
+      [{name:'Black',rating:74.1,slope:143},{name:'Green',rating:71.4,slope:133},{name:'Gold',rating:69.5,slope:133},{name:'Orange',rating:66.6,slope:126},{name:'Royal Blue',rating:61.5,slope:101}],
+      true, null, null, false),
+    mk('crossings','Sun 8/30','2:30 PM','Bandon Crossings Golf Course','full',18,72,
+      [{name:'Black',rating:74.0,slope:139},{name:'Blue',rating:71.1,slope:127},{name:'Blue/White',rating:70.1,slope:124},{name:'White',rating:69.0,slope:122},{name:'White/Red',rating:67.1,slope:118},{name:'Red',rating:65.7,slope:117},{name:'Gold',rating:62.3,slope:107}],
+      true,
+      [4,4,4,5,5,3,4,4,3, 4,3,5,5,3,4,4,3,5],
+      [15,11,7,9,3,13,5,1,17, 8,18,12,2,6,16,10,14,4],
+      true),
+    mk('shortys2','Mon 8/31','7:00 AM',"Shorty's",'short',19,57, [], false, null, null, false),
+  ];
+}
+
+/* ---------------- STORAGE (local, device-only, works offline) ---------------- */
+function lsGet(key, fallback){
+  try{
+    const raw = localStorage.getItem(key);
+    if(raw===null) return fallback;
+    return JSON.parse(raw);
+  }catch(e){ state.storageOk=false; return fallback; }
+}
+function lsSet(key, val){
+  try{ localStorage.setItem(key, JSON.stringify(val)); }
+  catch(e){ state.storageOk=false; showToast('Could not save locally — storage may be full or unavailable'); }
+}
+const SCHEDULE_VERSION = 4; // bump this any time defaultRounds() changes and the new data should overwrite what's saved on-device
+function applyScheduleOverwriteIfNeeded(){
+  const savedVersion = parseInt(localStorage.getItem(LS_KEYS.scheduleVersion) || '0', 10);
+  if(savedVersion < SCHEDULE_VERSION){
+    // full overwrite of the schedule/course data AND all scores — not a field-by-field patch.
+    // Necessary here because the short-course scoring format itself changed (strokes -> birdie/par/bogey + CTP).
+    state.rounds = defaultRounds();
+    state.scores = {};
+    saveRounds(); saveScores();
+    localStorage.setItem(LS_KEYS.scheduleVersion, String(SCHEDULE_VERSION));
+    showToast('Schedule & scoring rules updated to the latest version');
+  }
+}
+function loadState(){
+  state.players = lsGet(LS_KEYS.players, null) || defaultPlayers();
+  state.rounds  = lsGet(LS_KEYS.rounds, null)  || defaultRounds();
+  state.scores  = lsGet(LS_KEYS.scores, null)  || {};
+  state.auditLog = lsGet(LS_KEYS.auditLog, null) || [];
+  state.textScale = lsGet(LS_KEYS.textScale, null) || 'normal';
+  state.teamsFinalized = !!lsGet(LS_KEYS.teamsFinalized, false);
+  state.handicapAlertDismissedKey = lsGet(LS_KEYS.handicapAlertDismissed, null);
+  state.players.forEach(p=>{
+    if(!p.preferredTee) p.preferredTee='Gold';
+    if(!p.indexHistory) p.indexHistory=[];
+    if(p.email===undefined) p.email='';
+    if(p.phone===undefined) p.phone='';
+  });
+  seedKnownContacts();
+  seedBuyIns();
+  renamePlayer('vinny', 'Vinodh');
+  applyScheduleOverwriteIfNeeded();
+  if(!localStorage.getItem(LS_KEYS.players)) savePlayers();
+  if(!localStorage.getItem(LS_KEYS.rounds)) saveRounds();
+  if(!localStorage.getItem(LS_KEYS.scores)) saveScores();
+  if(!localStorage.getItem(LS_KEYS.pin)) localStorage.setItem(LS_KEYS.pin, '1234');
+}
+function savePlayers(){ lsSet(LS_KEYS.players, state.players); }
+function saveRounds(){ lsSet(LS_KEYS.rounds, state.rounds); }
+function saveScores(){ lsSet(LS_KEYS.scores, state.scores); }
+function saveAuditLog(){ lsSet(LS_KEYS.auditLog, state.auditLog); }
+
+/* ---------------- SHARED-LINK SYNC (optional, best-effort) ---------------- */
+// This device's own localStorage is always the working copy — nothing about this changes how
+// editing works. The functions below are purely about the ONE-WAY "Publish Update" button (push
+// a full snapshot up) and, for anyone opening the ?view=<blobId> link, pulling that published
+// snapshot down to look at, read-only. Everything here fails gracefully if there's no signal.
+async function fetchWithTimeout(url, opts, ms){
+  const ctrl = new AbortController();
+  const id = setTimeout(()=>ctrl.abort(), ms || 7000);
+  try{ return await fetch(url, Object.assign({}, opts||{}, { signal: ctrl.signal })); }
+  finally{ clearTimeout(id); }
+}
+// Retries a fetch ONCE after a short delay, but only for network-level failures (the
+// fetch() promise rejecting — offline, CORS, DNS, connection reset, etc). A response that
+// came back with a non-2xx status is NOT retried here since retrying won't fix a 4xx/5xx.
+async function fetchWithRetry(url, opts, ms){
+  try{
+    return await fetchWithTimeout(url, opts, ms);
+  }catch(firstErr){
+    await new Promise(r=>setTimeout(r, 1200));
+    try{
+      return await fetchWithTimeout(url, opts, ms);
+    }catch(secondErr){
+      // Attach a flag so callers know both attempts failed at the network level,
+      // and carry along enough context to build a useful diagnostic message.
+      secondErr.bandonRetried = true;
+      secondErr.bandonFirstErr = firstErr;
+      throw secondErr;
+    }
+  }
+}
+// Builds a detailed, human-readable diagnostic string for a failed cloud request —
+// this is what shows up in the toast so a screenshot of the error is actually useful.
+function describeFetchError(e, label){
+  const bits = [];
+  bits.push(`${label} failed: ${e.name}: ${e.message}`);
+  if(e.bandonRetried) bits.push('(retried once, same result)');
+  bits.push(navigator.onLine===false ? 'device reports OFFLINE' : 'device reports online');
+  bits.push(`page hosted at: ${window.location.origin}${window.location.pathname}`);
+  return bits.join(' \u2014 ');
+}
+async function fetchRemoteSnapshot(){
+  if(!state.viewBlobId) return null;
+  try{
+    const res = await fetchWithRetry(`${CLOUD_API}/${state.viewBlobId}`, { cache:'no-store' }, 9000);
+    if(!res.ok) return null;
+    return await res.json();
+  }catch(e){ console.warn('View refresh failed:', describeFetchError(e, 'view refresh')); return null; }
+}
+function applyRemoteSnapshot(snap){
+  if(!snap) return false;
+  if(Array.isArray(snap.players)) state.players = snap.players;
+  if(Array.isArray(snap.rounds)) state.rounds = snap.rounds;
+  if(snap.scores && typeof snap.scores==='object') state.scores = snap.scores;
+  if(Array.isArray(snap.auditLog)) state.auditLog = snap.auditLog;
+  if(typeof snap.teamsFinalized==='boolean') state.teamsFinalized = snap.teamsFinalized;
+  state.viewerDisplayedVersion = (typeof snap.version==='number') ? snap.version : null;
+  return true;
+}
+async function loadRemoteForViewer(){
+  if(!state.viewOnlyMode || !state.viewBlobId) return;
+  const el = document.getElementById('updateBanner');
+  if(el && state.updateBannerVisible) el.textContent = 'Refreshing\u2026';
+  const snap = await fetchRemoteSnapshot();
+  const loadingEl = document.getElementById('loadingScreen');
+  if(loadingEl) loadingEl.style.display = 'none';
+  const firstLoadFailed = !snap && state.viewerDisplayedVersion===null;
+  if(snap){ applyRemoteSnapshot(snap); state.updateBannerVisible = false; }
+  render();
+  renderUpdateBanner();
+  if(firstLoadFailed){
+    const contentEl = document.getElementById('content');
+    if(contentEl) contentEl.innerHTML = `<div class="card"><p class="muted">Couldn\u2019t load the live standings. Check your connection and try reloading this page — if this is the very first time, the trip organizer may not have published anything yet.</p></div>`;
+  }
+}
+async function checkForRemoteUpdate(){
+  if(!state.viewOnlyMode || state.viewerDisplayedVersion===null) return;
+  const snap = await fetchRemoteSnapshot();
+  if(snap && typeof snap.version==='number' && snap.version > state.viewerDisplayedVersion){
+    state.updateBannerVisible = true;
+    renderUpdateBanner();
+  }
+}
+function startUpdatePolling(){
+  setInterval(()=>{ if(state.viewOnlyMode) checkForRemoteUpdate(); }, 25000);
+  document.addEventListener('visibilitychange', ()=>{ if(!document.hidden && state.viewOnlyMode) checkForRemoteUpdate(); });
+}
+function renderUpdateBanner(){
+  const el = document.getElementById('updateBanner');
+  if(!el) return;
+  if(state.updateBannerVisible){
+    el.style.display = 'block';
+    el.textContent = '\u{1F514} New update available \u2014 tap to refresh';
+    el.onclick = loadRemoteForViewer;
+  } else {
+    el.style.display = 'none';
+  }
+}
+async function publishUpdate(){
+  if(state.viewOnlyMode || state.publishing) return;
+  if(window.location.protocol!=='http:' && window.location.protocol!=='https:'){
+    showToast(`Can\u2019t publish from here \u2014 this page is open as a local file (${window.location.protocol.replace(':','')}://\u2026), not a real hosted https:// link. On Android, opening the downloaded .html from Downloads/My Files does this. Host the file somewhere (GitHub Pages, Netlify, etc.) and open it via its https:// URL instead, then try again.`, 8000);
+    return;
+  }
+  state.publishing = true;
+  const btn = document.getElementById('publishUpdateBtn');
+  if(btn){ btn.disabled = true; btn.textContent = '\u2601\ufe0f Publishing\u2026'; }
+  const nextVersion = (lsGet(LS_KEYS.publishVersion, 0) || 0) + 1;
+  const payload = {
+    players: state.players, rounds: state.rounds, scores: state.scores,
+    auditLog: (state.auditLog||[]).slice(-1000), teamsFinalized: state.teamsFinalized,
+    version: nextVersion, publishedAt: new Date().toISOString(),
+  };
+  let lastErrorDetail = '';
+  try{
+    let blobId = state.cloudBlobId;
+    let res;
+    if(blobId){
+      try{
+        res = await fetchWithRetry(`${CLOUD_API}/${blobId}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }, 12000);
+        if(!res.ok){ lastErrorDetail = `update returned HTTP ${res.status}`; blobId = null; } // blob may have expired — fall through and make a fresh one
+      }catch(e){ lastErrorDetail = describeFetchError(e, 'update request'); blobId = null; }
+    }
+    if(!blobId){
+      try{
+        res = await fetchWithRetry(CLOUD_API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }, 12000);
+        if(res.ok){
+          const loc = res.headers.get('Location') || '';
+          blobId = loc.split('/').filter(Boolean).pop() || null;
+          if(!blobId) lastErrorDetail = 'created blob but no Location header/id came back';
+        } else {
+          lastErrorDetail = `create returned HTTP ${res.status}`;
+        }
+      }catch(e){ lastErrorDetail = describeFetchError(e, 'create request'); }
+    }
+    if(blobId){
+      if(blobId !== state.cloudBlobId){ state.cloudBlobId = blobId; lsSet(LS_KEYS.cloudBlobId, blobId); }
+      lsSet(LS_KEYS.publishVersion, nextVersion);
+      logEvent('other', `Published update to shared link (v${nextVersion})`);
+      const shareUrl = window.location.origin + window.location.pathname + '?view=' + blobId;
+      openPublishResultModal(shareUrl, nextVersion);
+    } else {
+      const detail = lastErrorDetail || 'unknown error';
+      const withHost = detail.includes('page hosted at') ? detail : `${detail} \u2014 page hosted at: ${window.location.origin}${window.location.pathname}`;
+      console.error('Publish failed:', withHost);
+      showToast(`Publish failed — ${withHost}`, 8000);
+    }
+  }catch(e){
+    console.error('Publish failed:', e);
+    showToast(`Publish failed — ${describeFetchError(e, 'publish')}`, 8000);
+  } finally {
+    state.publishing = false;
+    if(btn){ btn.disabled = false; btn.textContent = '\u2601\ufe0f Publish Update'; }
+  }
+}
+function openPublishResultModal(shareUrl, version){
+  state.publishModal = { shareUrl, version };
+  renderPublishModal();
+}
+function closePublishModal(){ state.publishModal = null; renderPublishModal(); }
+function renderPublishModal(){
+  const el = document.getElementById('publishModalOverlay');
+  if(!el) return;
+  if(!state.publishModal){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='flex';
+  const { shareUrl, version } = state.publishModal;
+  el.innerHTML = `<div class="modal-card">
+    <div class="flex between" style="margin-bottom:6px;"><strong style="font-family:var(--font-display); font-size:17px;">&#9729;&#65039; Published (v${version})</strong><button class="btn secondary small" id="publishModalClose" type="button">&times;</button></div>
+    <p class="muted" style="margin:0 0 10px;">Anyone with this link sees these standings, read-only, no login needed. Data lives on <strong>jsonblob.com</strong> — a free public JSON tool, not password-protected, but the address is effectively unguessable. It's a mirror of what's on your phone, not the source of truth, so nothing here is ever at risk.</p>
+    <div class="card" style="word-break:break-all; font-family:ui-monospace,monospace; font-size:12px;">${shareUrl}</div>
+    <div class="flex gap8" style="margin-top:10px;">
+      <button class="btn secondary" id="copyPublishLinkBtn" style="flex:1;">&#128203; Copy Link</button>
+      <button class="btn" id="textPublishLinkBtn" style="flex:1;">Text Link</button>
+      <button class="btn" id="emailPublishLinkBtn" style="flex:1;">Email Link</button>
+    </div>
+  </div>`;
+  document.getElementById('publishModalClose').onclick = closePublishModal;
+  document.getElementById('copyPublishLinkBtn').onclick = ()=>{
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(shareUrl).then(()=>showToast('Link copied')).catch(()=>showToast('Copy failed'));
+    else showToast('Clipboard not available on this browser');
+  };
+  document.getElementById('textPublishLinkBtn').onclick = ()=>{
+    const phones = state.players.map(p=>p.phone).filter(Boolean);
+    window.location.href = `sms:${phones.join(',')}?body=${encodeURIComponent('Bandon Cup live standings: '+shareUrl)}`;
+  };
+  document.getElementById('emailPublishLinkBtn').onclick = ()=>{
+    const emails = state.players.map(p=>p.email).filter(Boolean);
+    window.location.href = `mailto:${emails.join(',')}?subject=${encodeURIComponent('Bandon Cup — Live Standings Link')}&body=${encodeURIComponent('Check the latest standings here: '+shareUrl)}`;
+  };
+}
+
+/* ---------------- TEXT SIZE (accessibility) ---------------- */
+const TEXT_SCALE_STEPS = { normal: 1, large: 1.2, xlarge: 1.4 };
+const TEXT_SCALE_NEXT = { normal: 'large', large: 'xlarge', xlarge: 'normal' };
+const TEXT_SCALE_LABEL = { normal: 'Aa', large: 'Aa+', xlarge: 'Aa++' };
+function applyTextScale(){
+  const factor = TEXT_SCALE_STEPS[state.textScale] || 1;
+  // zoom scales the whole page (fonts, buttons, spacing) together, including modals that live outside #shell —
+  // supported in Safari and Chrome (the two browsers this phone-only app is actually used on).
+  document.body.style.zoom = factor;
+}
+function cycleTextScale(){
+  state.textScale = TEXT_SCALE_NEXT[state.textScale] || 'normal';
+  lsSet(LS_KEYS.textScale, state.textScale);
+  applyTextScale();
+  showToast(state.textScale==='normal' ? 'Text size: Normal' : state.textScale==='large' ? 'Text size: Large' : 'Text size: Extra Large');
+  render();
+}
+
+function logEvent(type, summary, extra){
+  extra = extra || {};
+  if(!state.auditLog) state.auditLog = [];
+  state.auditLog.push({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2,7),
+    ts: new Date().toISOString(),
+    type: type,
+    playerId: extra.playerId || null,
+    roundId: extra.roundId || null,
+    summary: summary,
+  });
+  if(state.auditLog.length > 4000) state.auditLog = state.auditLog.slice(-4000);
+  saveAuditLog();
+}
+function fmtLogTs(iso){
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'}) + ' ' + d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+
+function showToast(msg, durationMs){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), durationMs || 1800);
+}
+
+/* ---------------- LOCK / ADMIN ---------------- */
+function tryUnlock(){
+  const entered = prompt('Enter PIN to unlock editing:');
+  if(entered===null) return;
+  const pin = localStorage.getItem(LS_KEYS.pin) || '1234';
+  if(entered===pin){ state.locked=false; showToast('Unlocked for editing'); render(); }
+  else showToast('Wrong PIN');
+}
+function lockNow(){ state.locked=true; showToast('Locked'); render(); }
+function changePin(){
+  const current = prompt('Enter current PIN:');
+  if(current===null) return;
+  const pin = localStorage.getItem(LS_KEYS.pin) || '1234';
+  if(current!==pin){ showToast('Wrong PIN'); return; }
+  const next = prompt('Enter new PIN:');
+  if(!next) return;
+  localStorage.setItem(LS_KEYS.pin, next);
+  showToast('PIN updated');
+}
+function renderHeaderControls(){
+  const el = document.getElementById('headerControls');
+  if(state.viewOnlyMode){
+    el.innerHTML = `
+      <button class="hbtn locked" id="viewOnlyBadge" disabled>&#128065; View Only</button>
+      <button class="hbtn" id="shareBtn">&#128228; Send Update</button>
+      <button class="hbtn" id="logBtn">&#128203; Activity Log</button>
+      <button class="hbtn" id="textSizeBtn" title="Bigger text">&#128270; ${TEXT_SCALE_LABEL[state.textScale]}</button>
+    `;
+  } else {
+    el.innerHTML = `
+      <button class="hbtn ${state.locked?'locked':''}" id="lockToggle">${state.locked ? '&#128274; Locked' : '&#128275; Unlocked — tap to lock'}</button>
+      <button class="hbtn" id="publishUpdateBtn" ${state.publishing?'disabled':''}>&#9729;&#65039; ${state.publishing?'Publishing…':'Publish Update'}</button>
+      <button class="hbtn" id="shareBtn">&#128228; Send Update</button>
+      <button class="hbtn" id="logBtn">&#128203; Activity Log</button>
+      <button class="hbtn" id="textSizeBtn" title="Bigger text">&#128270; ${TEXT_SCALE_LABEL[state.textScale]}</button>
+    `;
+    document.getElementById('lockToggle').onclick = ()=> state.locked ? tryUnlock() : lockNow();
+    document.getElementById('publishUpdateBtn').onclick = publishUpdate;
+  }
+  document.getElementById('shareBtn').onclick = ()=> openShareModal('update');
+  document.getElementById('logBtn').onclick = ()=> openLogModal();
+  document.getElementById('textSizeBtn').onclick = cycleTextScale;
+  const fullCt = state.rounds.filter(r=>r.type==='full').length;
+  const shortCt = state.rounds.filter(r=>r.type==='short').length;
+  const subEl = document.getElementById('headerSub2');
+  if(subEl) subEl.innerHTML = `8 players &middot; ${fullCt} championship round${fullCt===1?'':'s'} &middot; ${shortCt} short-course session${shortCt===1?'':'s'}${state.viewOnlyMode?' &middot; live view':''}`;
+}
+
+/* ---------------- FAIR TEAM ASSIGNMENT ---------------- */
+// Display convention across the leaderboard: grouped by team (A then B), with Chet always
+// shown first within Team A regardless of rank — everyone else keeps their existing order
+// (typically points/winnings descending) within their team's block.
+function reorderByTeamChetFirst(sortedArr, getTeam, getId){
+  const teamA = sortedArr.filter(x=>getTeam(x)==='A');
+  const teamB = sortedArr.filter(x=>getTeam(x)==='B');
+  const ci = teamA.findIndex(x=>getId(x)==='chet');
+  if(ci>0){ const [chetItem] = teamA.splice(ci,1); teamA.unshift(chetItem); }
+  return teamA.concat(teamB);
+}
+function computeFairestTeams(){
+  const players = state.players;
+  const n = players.length;
+  const chetIdx = players.findIndex(p=>p.id==='chet');
+  if(n!==8){
+    // fallback for a non-standard roster size: snake-draft by index, closest we can do generically
+    const sorted = players.slice().sort((a,b)=>b.index-a.index);
+    let groupX=[], groupY=[];
+    sorted.forEach((p,i)=>{ (i%4<2 ? groupX : groupY).push(p); });
+    const chetInX = groupX.some(p=>p.id==='chet');
+    const teamA = chetIdx<0 || chetInX ? groupX : groupY;
+    const teamB = chetIdx<0 || chetInX ? groupY : groupX;
+    const sumA = teamA.reduce((s,p)=>s+p.index,0), sumB = teamB.reduce((s,p)=>s+p.index,0);
+    return { teamA, teamB, sumA, sumB, diff: Math.abs(sumA-sumB) };
+  }
+  const idxs = players.map((p,i)=>i);
+  function combinations(arr, k){
+    const results = [];
+    function helper(start, combo){
+      if(combo.length===k){ results.push(combo.slice()); return; }
+      for(let i=start;i<arr.length;i++){ combo.push(arr[i]); helper(i+1, combo); combo.pop(); }
+    }
+    helper(0, []);
+    return results;
+  }
+  const combos = combinations(idxs, 4);
+  let best = null;
+  combos.forEach(comboA=>{
+    const setA = new Set(comboA);
+    if(!setA.has(0)) return; // canonical form — only consider each partition once
+    const comboB = idxs.filter(i=>!setA.has(i));
+    const sumA = comboA.reduce((s,i)=>s+players[i].index,0);
+    const sumB = comboB.reduce((s,i)=>s+players[i].index,0);
+    const diff = Math.abs(sumA-sumB);
+    const avgA = sumA/4, avgB = sumB/4;
+    const spread = comboA.reduce((s,i)=>s+Math.pow(players[i].index-avgA,2),0) + comboB.reduce((s,i)=>s+Math.pow(players[i].index-avgB,2),0);
+    if(!best || diff<best.diff-1e-9 || (Math.abs(diff-best.diff)<1e-9 && spread<best.spread)){
+      best = { comboA, comboB, sumA, sumB, diff, spread };
+    }
+  });
+  // whichever computed group contains Chet is labeled Team A — the fairness math doesn't change,
+  // only which side gets the "A" label, so Chet is always on Team A.
+  let AIdxs = best.comboA, BIdxs = best.comboB, sumA = best.sumA, sumB = best.sumB;
+  if(chetIdx>=0 && !AIdxs.includes(chetIdx)){
+    AIdxs = best.comboB; BIdxs = best.comboA; sumA = best.sumB; sumB = best.sumA;
+  }
+  return { teamA: AIdxs.map(i=>players[i]), teamB: BIdxs.map(i=>players[i]), sumA, sumB, diff: best.diff };
+}
+function startFairTeamAssignment(){
+  if(state.locked){ showToast('Unlock editing first'); return; }
+  if(state.teamsFinalized){ showToast('Teams are already locked in for this trip.'); return; }
+  const result = computeFairestTeams();
+  const teamAList = result.teamA.map(p=>`${p.name} (${p.index})`).join(', ');
+  const teamBList = result.teamB.map(p=>`${p.name} (${p.index})`).join(', ');
+  const msg1 = `Fairest possible 4-vs-4 split by Handicap Index:\n\nTEAM A: ${teamAList}\n  total ${result.sumA.toFixed(1)}  ·  avg ${(result.sumA/4).toFixed(1)}\n\nTEAM B: ${teamBList}\n  total ${result.sumB.toFixed(1)}  ·  avg ${(result.sumB/4).toFixed(1)}\n\nDifference between teams: ${result.diff.toFixed(1)}\n\nThis is the most balanced 4-vs-4 split available from current handicaps. Continue?`;
+  if(!confirm(msg1)) return;
+  const msg2 = `FINAL CONFIRMATION — this cannot be undone.\n\nPressing OK will:\n\n• Lock these two teams in PERMANENTLY (team assignments can never be changed again in this app)\n• Reset ALL scores and standings back to zero, for every round, so the tournament starts clean\n\nOnly do this once you're ready to start the trip for real — the day before Round 1 is the right time. Are you absolutely sure?`;
+  if(!confirm(msg2)) return;
+
+  result.teamA.forEach(p=>{ getPlayer(p.id).team = 'A'; });
+  result.teamB.forEach(p=>{ getPlayer(p.id).team = 'B'; });
+  savePlayers();
+  state.scores = {};
+  saveScores();
+  state.teamsFinalized = true;
+  lsSet(LS_KEYS.teamsFinalized, true);
+  logEvent('teams', `TEAMS FINALIZED — Team A: ${teamAList} (avg ${(result.sumA/4).toFixed(1)}) vs Team B: ${teamBList} (avg ${(result.sumB/4).toFixed(1)}), difference ${result.diff.toFixed(1)}. All scores reset to zero for a fresh start.`);
+  showToast('Teams locked in — scores reset for a fresh start!');
+  render();
+  openShareModal('teamReveal');
+}
+
+/* ---------------- GOLF MATH ---------------- */
+function courseHandicap(index, slope, rating, par){ return Math.round( index * (slope/113) + (rating - par) ); }
+function strokesOnHole(ch, holes, strokeIndexArr, holeIdx0){
+  const base = Math.floor(ch/holes);
+  const rem = ch - base*holes;
+  const rank = strokeIndexArr[holeIdx0];
+  return base + (rank<=rem ? 1 : 0);
+}
+function netStablefordPts(gross, par, strokesRecv){
+  if(gross===null || gross===undefined || gross==='') return null;
+  const net = gross - strokesRecv;
+  const diff = net - par;
+  if(diff<=-2) return 4;
+  if(diff===-1) return 3;
+  if(diff===0) return 2;
+  if(diff===1) return 1;
+  return 0;
+}
+function getRound(id){ return state.rounds.find(r=>r.id===id); }
+function getPlayer(id){ return state.players.find(p=>p.id===id); }
+function getPlayerHoles(roundId, playerId){
+  const s = state.scores[roundId];
+  if(!s || !s.holes || !s.holes[playerId]) { const rc = getRound(roundId); return Array(rc.holes).fill(null); }
+  return s.holes[playerId];
+}
+function ensureRoundScoreObj(roundId){
+  if(!state.scores[roundId]) state.scores[roundId] = { finalized:false, snapshot:{}, holes:{}, playerTee:{}, teeRecSeen:{}, ctpWinners:{} };
+  if(!state.scores[roundId].holes) state.scores[roundId].holes = {};
+  if(!state.scores[roundId].playerTee) state.scores[roundId].playerTee = {};
+  if(!state.scores[roundId].teeRecSeen) state.scores[roundId].teeRecSeen = {};
+  if(!state.scores[roundId].snapshot) state.scores[roundId].snapshot = {};
+  if(!state.scores[roundId].ctpWinners) state.scores[roundId].ctpWinners = {};
+  return state.scores[roundId];
+}
+function getSelectedTeeName(roundId, playerId){
+  const rc = getRound(roundId);
+  if(!rc.tees || rc.tees.length===0) return null;
+  const s = state.scores[roundId];
+  if(s && s.playerTee && s.playerTee[playerId] && rc.tees.some(t=>t.name===s.playerTee[playerId])) return s.playerTee[playerId];
+  const pl = getPlayer(playerId);
+  if(rc.tees.some(t=>t.name===pl.preferredTee)) return pl.preferredTee;
+  return rc.tees[0].name;
+}
+function getTeeObj(rc, teeName){ return rc.tees.find(t=>t.name===teeName) || rc.tees[0]; }
+function getCHForPlayerRound(roundId, playerId){
+  const rc = getRound(roundId);
+  const s = state.scores[roundId];
+  if(s && s.finalized && s.snapshot && s.snapshot[playerId]) return s.snapshot[playerId];
+  const pl = getPlayer(playerId);
+  const teeName = getSelectedTeeName(roundId, playerId);
+  const tee = getTeeObj(rc, teeName);
+  const ch = courseHandicap(pl.index, tee.slope, tee.rating, rc.par);
+  return { indexUsed: pl.index, teeName, rating: tee.rating, slope: tee.slope, ch };
+}
+function computeFullRoundResult(roundId){
+  const rc = getRound(roundId);
+  const perPlayer = {};
+  state.players.forEach(pl=>{
+    const holes = getPlayerHoles(roundId, pl.id);
+    const {indexUsed, ch, teeName} = getCHForPlayerRound(roundId, pl.id);
+    let grossTotal = 0, played = 0, netPtsTotal = 0;
+    const perHolePts = [];
+    holes.forEach((g, i)=>{
+      if(g===null || g===undefined || g===''){ perHolePts.push(null); return; }
+      const recv = strokesOnHole(ch, rc.holes, rc.strokeIndex, i);
+      const pts = netStablefordPts(g, rc.holePars[i], recv);
+      perHolePts.push(pts);
+      grossTotal += Number(g); played += 1; netPtsTotal += pts;
+    });
+    perPlayer[pl.id] = { indexUsed, ch, teeName, grossTotal, played, netPtsTotal, perHolePts };
+  });
+  let teamA = 0, teamB = 0;
+  for(let h=0; h<rc.holes; h++){
+    let bestA = null, bestB = null;
+    state.players.forEach(pl=>{
+      const pts = perPlayer[pl.id].perHolePts[h];
+      if(pts===null) return;
+      if(pl.team==='A') bestA = (bestA===null) ? pts : Math.max(bestA, pts);
+      else bestB = (bestB===null) ? pts : Math.max(bestB, pts);
+    });
+    if(bestA!==null) teamA += bestA;
+    if(bestB!==null) teamB += bestB;
+  }
+  return { perPlayer, teamA, teamB };
+}
+/* ---------------- HANDICAP vs ACTUAL PLAY REVIEW ---------------- */
+// Once at least 3 full rounds are completely scored for everyone, compare each player's actual
+// scoring (via course rating/slope) against their posted Handicap Index. A rough per-round
+// differential is (Gross - Rating) * 113/Slope; averaged across the completed rounds that's an
+// "implied index" from how they actually played. We compare each player's gap (implied - posted)
+// against the GROUP'S MEDIAN gap rather than zero, so a course that plays generally easy/hard for
+// everyone doesn't false-flag the whole field — only players who stand out from the group.
+const HANDICAP_REVIEW_THRESHOLD = 3.0; // strokes of deviation from the group median to flag as a discrepancy
+function fullRoundIsComplete(rc){
+  return state.players.every(pl=>{
+    const holes = getPlayerHoles(rc.id, pl.id);
+    return holes.length===rc.holes && holes.every(h=> h!==null && h!==undefined && h!=='');
+  });
+}
+/* ---------------- CUP TIE-BREAKER (short courses) ---------------- */
+// If all 6 championship (full) rounds finish dead even on Cup points, the two short-course skins
+// sessions — normally their own separate side-money game — combine to break the tie.
+function computeCupTallyFinal(){
+  const fullRounds = state.rounds.filter(r=>r.type==='full');
+  const allComplete = fullRounds.length>0 && fullRounds.every(fullRoundIsComplete);
+  let cupA=0, cupB=0;
+  fullRounds.forEach(rc=>{
+    const res = computeFullRoundResult(rc.id);
+    if(res.teamA>res.teamB) cupA+=1; else if(res.teamB>res.teamA) cupB+=1; else { cupA+=0.5; cupB+=0.5; }
+  });
+  return { allComplete, cupA, cupB, isTied: allComplete && cupA===cupB, fullRoundsCount: fullRounds.length };
+}
+function computeTiebreakerResult(){
+  const cup = computeCupTallyFinal();
+  const shortRounds = state.rounds.filter(r=>r.type==='short');
+  let teamAPts=0, teamBPts=0;
+  const perCourse = shortRounds.map(rc=>{
+    const res = computeShortRoundResult(rc.id);
+    let a=0, b=0;
+    state.players.forEach(p=>{ const pts = res.skinsCount[p.id]||0; if(p.team==='A') a+=pts; else b+=pts; });
+    teamAPts += a; teamBPts += b;
+    return { course: rc.course, roundId: rc.id, teamAPts: a, teamBPts: b };
+  });
+  const winner = teamAPts>teamBPts ? 'A' : (teamBPts>teamAPts ? 'B' : 'T');
+  return { active: cup.isTied, cup, perCourse, teamAPts, teamBPts, winner };
+}
+function computeHandicapDifferentials(){
+  const fullRounds = state.rounds.filter(r=>r.type==='full');
+  const completeRounds = fullRounds.filter(fullRoundIsComplete);
+  if(completeRounds.length<3) return { ready:false, completeCount: completeRounds.length, neededCount:3 };
+  const rows = state.players.map(pl=>{
+    const perRound = completeRounds.map(rc=>{
+      const holes = getPlayerHoles(rc.id, pl.id);
+      const gross = holes.reduce((s,g)=>s+Number(g),0);
+      const { rating, slope } = getCHForPlayerRound(rc.id, pl.id);
+      const diff = (gross - rating) * 113 / slope;
+      return { roundId: rc.id, course: rc.course, gross, diff };
+    });
+    const impliedAvg = perRound.reduce((a,r)=>a+r.diff,0) / perRound.length;
+    return { pl, perRound, impliedAvg, gap: impliedAvg - pl.index };
+  });
+  const sortedGaps = rows.map(r=>r.gap).slice().sort((a,b)=>a-b);
+  const mid = Math.floor(sortedGaps.length/2);
+  const medianGap = sortedGaps.length%2 ? sortedGaps[mid] : (sortedGaps[mid-1]+sortedGaps[mid])/2;
+  rows.forEach(r=>{ r.deviation = r.gap - medianGap; r.flagged = Math.abs(r.deviation) > HANDICAP_REVIEW_THRESHOLD; });
+  rows.sort((a,b)=> Math.abs(b.deviation) - Math.abs(a.deviation));
+  return { ready:true, completeCount: completeRounds.length, roundIds: completeRounds.map(r=>r.id).sort(), rows, medianGap, threshold: HANDICAP_REVIEW_THRESHOLD, flaggedCount: rows.filter(r=>r.flagged).length };
+}
+function handicapAlertKeyFor(result){
+  return result.roundIds.join(',') + '|' + result.rows.filter(r=>r.flagged).map(r=>r.pl.id).sort().join(',');
+}
+function checkHandicapAlert(){
+  if(state.handicapModal) return; // already showing something
+  const result = computeHandicapDifferentials();
+  if(!result.ready || result.flaggedCount===0) return;
+  const key = handicapAlertKeyFor(result);
+  if(state.handicapAlertDismissedKey===key) return;
+  state.handicapModal = { result, key, auto:true };
+  const names = result.rows.filter(r=>r.flagged).map(r=>`${r.pl.name} (${r.deviation>0?'+':''}${r.deviation.toFixed(1)} vs group)`).join(', ');
+  logEvent('other', `Handicap review flagged: ${names} — after ${result.completeCount} completed rounds`);
+}
+function openHandicapModal(){
+  const result = computeHandicapDifferentials();
+  state.handicapModal = { result, key: result.ready ? handicapAlertKeyFor(result) : null, auto:false };
+  renderHandicapModal();
+}
+function closeHandicapModal(){
+  const m = state.handicapModal;
+  if(m && m.key){ state.handicapAlertDismissedKey = m.key; lsSet(LS_KEYS.handicapAlertDismissed, m.key); }
+  state.handicapModal = null;
+  renderHandicapModal();
+}
+function renderHandicapModal(){
+  const el = document.getElementById('handicapModalOverlay');
+  if(!state.handicapModal){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='flex';
+  const { result, auto } = state.handicapModal;
+  let body;
+  if(!result.ready){
+    body = `<p class="muted">Once at least 3 full rounds are completely scored for all 8 players, this will compare everyone's actual play (via each course's rating &amp; slope) against their posted Handicap Index. So far: <strong>${result.completeCount} of ${result.neededCount}</strong> full rounds fully scored.</p>`;
+  } else {
+    const rows = result.rows.map(r=>`
+      <tr class="${r.flagged?'flag-row':''}">
+        <td class="name">${r.flagged?'&#9888;&#65039; ':''}${r.pl.name} <span class="badge ${r.pl.team}">${r.pl.team}</span></td>
+        <td>${r.pl.index}</td>
+        <td>${r.impliedAvg.toFixed(1)}</td>
+        <td>${r.deviation>0?'+':''}${r.deviation.toFixed(1)}</td>
+      </tr>`).join('');
+    body = `
+      <p class="muted" style="margin:0 0 10px;">Based on the ${result.completeCount} full rounds completed so far, here's each player's posted Handicap Index vs. what their actual scoring (against course rating &amp; slope) implies. Everyone's compared to the <strong>group's median gap (${result.medianGap>=0?'+':''}${result.medianGap.toFixed(1)})</strong> so a generally tougher or easier-than-rated course doesn't skew things &mdash; only real outliers get flagged.</p>
+      <table><thead><tr><th style="text-align:left;">Player</th><th>Posted</th><th>Implied</th><th>Vs. group</th></tr></thead><tbody>${rows}</tbody></table>
+      ${result.flaggedCount>0 ? `<div class="warn" style="background:#FDEDE8; border-color:var(--rust); color:#7A2E1B; margin-top:10px;"><strong>${result.flaggedCount} player${result.flaggedCount===1?'':'s'} flagged</strong> &mdash; their scoring differs from the group's pattern by more than ${result.threshold} strokes. Worth a look on the Players tab; this is just a suggestion, you make the call.</div>` : `<p class="muted" style="margin-top:10px;">Everyone's playing within a reasonable range of their posted handicap &mdash; no changes suggested.</p>`}
+    `;
+  }
+  el.innerHTML = `<div class="modal-card">
+    <div class="flex between" style="margin-bottom:6px;"><strong style="font-family:var(--font-display); font-size:17px;">&#9878;&#65039; Handicap Check</strong><button class="btn secondary small" id="handicapModalClose" type="button">&times;</button></div>
+    ${auto ? '<p class="muted" style="margin:0 0 10px;">This popped up automatically now that 3 full rounds are in the books.</p>' : ''}
+    ${body}
+    <button class="btn gold" id="handicapModalGotIt" style="width:100%; margin-top:12px;">Got it</button>
+  </div>`;
+  document.getElementById('handicapModalClose').onclick = closeHandicapModal;
+  document.getElementById('handicapModalGotIt').onclick = closeHandicapModal;
+}
+
+function computeRoundWinnerBreakdown(roundId){
+  const rc = getRound(roundId);
+  const res = computeFullRoundResult(roundId);
+  const holesData = [];
+  for(let h=0; h<rc.holes; h++){
+    let bestA=null, bestAId=null, bestB=null, bestBId=null;
+    state.players.forEach(pl=>{
+      const pts = res.perPlayer[pl.id].perHolePts[h];
+      if(pts===null) return;
+      if(pl.team==='A'){ if(bestA===null || pts>bestA){ bestA=pts; bestAId=pl.id; } }
+      else { if(bestB===null || pts>bestB){ bestB=pts; bestBId=pl.id; } }
+    });
+    let winner = null;
+    if(bestA!==null && bestB!==null) winner = bestA>bestB ? 'A' : (bestB>bestA ? 'B' : 'T');
+    else if(bestA!==null) winner = 'pending';
+    else if(bestB!==null) winner = 'pending';
+    holesData.push({ hole:h+1, par:rc.holePars[h], bestA, bestAId, bestB, bestBId, winner });
+  }
+  return { holesData, teamA: res.teamA, teamB: res.teamB };
+}
+function computeMedalistBreakdown(playerId){
+  const fullRounds = state.rounds.filter(r=>r.type==='full');
+  const rounds = [];
+  let total = 0;
+  fullRounds.forEach(rc=>{
+    const res = computeFullRoundResult(rc.id);
+    const pr = res.perPlayer[playerId];
+    if(pr && pr.played>0){
+      rounds.push({ course: rc.course, date: rc.date, teeName: pr.teeName, ch: pr.ch, gross: pr.grossTotal, netPts: pr.netPtsTotal });
+      total += pr.netPtsTotal;
+    }
+  });
+  return { rounds, total };
+}
+function computeMoneySkinsResult(roundId){
+  const rc = getRound(roundId);
+  const buyIn = rc.buyIn || 10;
+  const potTotal = buyIn * state.players.length;
+  const chMap = {};
+  state.players.forEach(p=>{ chMap[p.id] = getCHForPlayerRound(roundId, p.id).ch; });
+  const holesData = [];
+  // Pass 1: determine each hole's winner (or tie) without assigning money yet
+  for(let h=0; h<rc.holes; h++){
+    const isPar3 = rc.holePars[h]===3;
+    const scores = [];
+    state.players.forEach(p=>{
+      const g = getPlayerHoles(roundId, p.id)[h];
+      if(g===null || g===undefined || g==='') return;
+      const recv = strokesOnHole(chMap[p.id], rc.holes, rc.strokeIndex, h);
+      scores.push({ pid:p.id, gross:Number(g), net:Number(g)-recv });
+    });
+    let winnerId = null, tie = false;
+    if(scores.length){
+      const key = isPar3 ? 'gross' : 'net';
+      const best = Math.min(...scores.map(s=>s[key]));
+      const tiedAtBest = scores.filter(s=>s[key]===best);
+      if(tiedAtBest.length===1) winnerId = tiedAtBest[0].pid; else tie = tiedAtBest.length>1;
+    }
+    holesData.push({ hole:h+1, par:rc.holePars[h], isPar3, winnerId, tie, enteredCt: scores.length, value: 0 });
+  }
+  // Pass 2: the pot splits evenly across however many holes actually produced a clear winner —
+  // 1 winning hole means that player takes the whole pot; 18 winning holes means it splits 18 ways.
+  const winningHolesCount = holesData.filter(h=>h.winnerId).length;
+  const perHoleShare = winningHolesCount>0 ? potTotal/winningHolesCount : 0;
+  const winnings = {}; state.players.forEach(p=> winnings[p.id]=0);
+  holesData.forEach(hd=>{
+    if(hd.winnerId){ hd.value = perHoleShare; winnings[hd.winnerId] += perHoleShare; }
+  });
+  return { buyIn, potTotal, winningHolesCount, perHoleShare, holesData, winnings };
+}
+function computePlayerSkinsBreakdown(playerId){
+  const fullRounds = state.rounds.filter(r=>r.type==='full');
+  const courses = [];
+  let grandTotal = 0;
+  fullRounds.forEach(rc=>{
+    const money = computeMoneySkinsResult(rc.id);
+    const wonHoles = money.holesData.filter(h=>h.winnerId===playerId);
+    if(wonHoles.length){
+      const subtotal = wonHoles.reduce((s,h)=>s+h.value,0);
+      courses.push({ course: rc.course, date: rc.date, holes: wonHoles, subtotal });
+      grandTotal += subtotal;
+    }
+  });
+  return { courses, grandTotal };
+}
+const CAT_RANK = { birdie:2, par:1, bogey:0 };
+const CAT_BASE_PTS = { birdie:3, par:1, bogey:0 };
+function getStakeMultiplier(totalHoles, holeNum){
+  if(totalHoles===13){ if(holeNum<=5) return 1; if(holeNum<=10) return 2; return 4; }
+  if(totalHoles===19){ if(holeNum<=7) return 1; if(holeNum<=14) return 2; return 4; }
+  const t1 = Math.round(totalHoles*0.4), t2 = Math.round(totalHoles*0.75);
+  if(holeNum<=t1) return 1;
+  if(holeNum<=t2) return 2;
+  return 4;
+}
+function computeShortRoundResult(roundId){
+  const rc = getRound(roundId);
+  const s = state.scores[roundId];
+  const holesData = [];
+  const skinsCount = {}; state.players.forEach(pl=> skinsCount[pl.id]=0); // holds POINTS totals now
+  for(let h=0; h<rc.holes; h++){
+    const entries = {};
+    state.players.forEach(pl=>{
+      const cat = getPlayerHoles(roundId, pl.id)[h];
+      if(cat==='birdie'||cat==='par'||cat==='bogey') entries[pl.id] = cat;
+    });
+    const enteredIds = Object.keys(entries);
+    const mult = getStakeMultiplier(rc.holes, h+1);
+    let bestCat = null, tiedIds = [];
+    if(enteredIds.length){
+      let bestRank = -1;
+      enteredIds.forEach(pid=>{ const r = CAT_RANK[entries[pid]]; if(r>bestRank) bestRank = r; });
+      bestCat = Object.keys(CAT_RANK).find(k=>CAT_RANK[k]===bestRank);
+      tiedIds = enteredIds.filter(pid=> entries[pid]===bestCat);
+    }
+    let winnerId = null, needsCtp = false, points = 0;
+    if(bestCat && bestCat!=='bogey'){
+      points = CAT_BASE_PTS[bestCat] * mult;
+      if(tiedIds.length===1){ winnerId = tiedIds[0]; }
+      else if(tiedIds.length>1){
+        const ctp = s && s.ctpWinners ? s.ctpWinners[h] : null;
+        if(ctp && tiedIds.includes(ctp)) winnerId = ctp; else needsCtp = true;
+      }
+    }
+    holesData.push({ hole:h+1, mult, entries, bestCat, tiedIds, winnerId, points: winnerId?points:0, needsCtp, enteredCt: enteredIds.length });
+    if(winnerId) skinsCount[winnerId] += points;
+  }
+  return { holesData, skinsCount, carryHoles: 0 };
+}
+function shortRoundRanking(roundId){
+  const res = computeShortRoundResult(roundId);
+  const played = new Set();
+  res.holesData.forEach(hd=> Object.keys(hd.entries).forEach(pid=> played.add(pid)));
+  const list = state.players.filter(p=>played.has(p.id)).map(p=>({ p, points: res.skinsCount[p.id] }));
+  list.sort((a,b)=> b.points-a.points);
+  let rank=0, prevPts=null, shown=0;
+  return list.map(x=>{ shown++; if(x.points!==prevPts){ rank=shown; prevPts=x.points; } return { rank, p:x.p, points:x.points }; });
+}
+
+/* ---------------- RENDER: SHELL ---------------- */
+function render(){
+  if(!state.viewOnlyMode) checkHandicapAlert();
+  const tbStatus = computeCupTallyFinal();
+  const tiebreakerTabBtn = document.getElementById('tiebreakerTabBtn');
+  if(tiebreakerTabBtn) tiebreakerTabBtn.style.display = tbStatus.isTied ? '' : 'none';
+  if(state.tab==='tiebreaker' && !tbStatus.isTied) state.tab = 'leaderboard';
+  renderHeaderControls();
+  document.querySelectorAll('#tabbar button').forEach(b=>{ b.classList.toggle('active', b.dataset.tab===state.tab); });
+  const content = document.getElementById('content');
+  if(state.tab==='leaderboard') content.innerHTML = renderLeaderboard();
+  else if(state.tab==='players') content.innerHTML = renderPlayers();
+  else if(state.tab==='rules') content.innerHTML = renderRules();
+  else if(state.tab==='tiebreaker') content.innerHTML = renderTiebreaker();
+  else if(state.tab==='rounds'){
+    if(state.activeRoundId && state.activeHoleIndex!==null && state.activeHoleIndex!==undefined) content.innerHTML = renderHoleEntry(state.activeRoundId, state.activeHoleIndex);
+    else if(state.activePlayerId && state.activeRoundId) content.innerHTML = renderScoreEntry(state.activeRoundId, state.activePlayerId);
+    else if(state.activeRoundId) content.innerHTML = renderRoundDetail(state.activeRoundId);
+    else content.innerHTML = renderRoundsList();
+  }
+  attachHandlers();
+  renderTeeModal();
+  renderShareModal();
+  renderImportModal();
+  renderLogModal();
+  renderHandicapModal();
+  renderPublishModal();
+  renderUpdateBanner();
+}
+
+/* ---------------- RENDER: LEADERBOARD ---------------- */
+function renderLeaderboard(){
+  let cupA = 0, cupB = 0;
+  const fullRounds = state.rounds.filter(r=>r.type==='full');
+  const roundRows = fullRounds.map(rc=>{
+    const res = computeFullRoundResult(rc.id);
+    let pt = '&mdash;';
+    const played = state.players.some(p=>getPlayerHoles(rc.id,p.id).some(g=>g!==null));
+    if(played){
+      if(res.teamA>res.teamB){ cupA+=1; pt = '<span class="badge A">A +1</span>'; }
+      else if(res.teamB>res.teamA){ cupB+=1; pt = '<span class="badge B">B +1</span>'; }
+      else { cupA+=0.5; cupB+=0.5; pt = '<span class="badge full">Tie</span>'; }
+    }
+    return `<tr class="skins-row" data-open-round-breakdown="${rc.id}"><td class="name">${rc.course} <span class="chev">&rsaquo;</span></td><td>${res.teamA}</td><td>${res.teamB}</td><td>${pt}</td></tr>`;
+  }).join('');
+  const medalSorted = state.players.map(pl=>{
+    let total = 0, roundsPlayed = 0;
+    fullRounds.forEach(rc=>{
+      const res = computeFullRoundResult(rc.id);
+      if(res.perPlayer[pl.id].played>0){ total += res.perPlayer[pl.id].netPtsTotal; roundsPlayed++; }
+    });
+    return { pl, total, roundsPlayed };
+  }).sort((a,b)=> b.total - a.total);
+  { let rank=0, prev=null, shown=0; medalSorted.forEach(m=>{ shown++; if(m.total!==prev){ rank=shown; prev=m.total; } m.rank=rank; }); }
+  const leaderText = cupA===cupB ? 'Cup is knotted up' : (cupA>cupB ? 'Team A leads the Cup' : 'Team B leads the Cup');
+  const medalRows = medalSorted.map(m=> `
+    <tr class="skins-row ${m.rank===1 && m.total>0 ? 'lead-row':''}" data-open-medalist="${m.pl.id}">
+      <td>${m.rank}</td><td class="name">${m.pl.name} <span class="badge ${m.pl.team}">${m.pl.team}</span> <span class="chev">&rsaquo;</span></td>
+      <td>${m.total}</td><td>${m.roundsPlayed}/${fullRounds.length}</td></tr>`).join('');
+  const shortRounds = state.rounds.filter(r=>r.type==='short');
+  const skinsTotals = {}; state.players.forEach(p=> skinsTotals[p.id]=0);
+  shortRounds.forEach(rc=>{ const res = computeShortRoundResult(rc.id); Object.keys(res.skinsCount).forEach(pid=> skinsTotals[pid]+=res.skinsCount[pid]); });
+  const skinsSortedLB = state.players.map(p=>({p,count:skinsTotals[p.id]})).sort((a,b)=>b.count-a.count);
+  const skinsRows = skinsSortedLB
+    .map(x=>`<tr><td class="name">${x.p.name} <span class="badge ${x.p.team}">${x.p.team}</span></td><td>${x.count}</td></tr>`).join('');
+  const moneyTotals = {}; state.players.forEach(p=>moneyTotals[p.id]=0);
+  let potGrandTotal = 0;
+  fullRounds.forEach(rc=>{ const m = computeMoneySkinsResult(rc.id); potGrandTotal += m.potTotal; state.players.forEach(p=> moneyTotals[p.id]+=m.winnings[p.id]); });
+  const moneySortedLB = state.players.map(p=>({p,amt:moneyTotals[p.id]})).sort((a,b)=>b.amt-a.amt);
+  { let rank=0, prev=null, shown=0; moneySortedLB.forEach(x=>{ shown++; if(x.amt!==prev){ rank=shown; prev=x.amt; } x.rank=rank; }); }
+  const moneyRowsLB = moneySortedLB
+    .map(x=>`<tr class="skins-row ${x.rank===1 && x.amt>0?'lead-row':''}" data-open-player-skins="${x.p.id}"><td class="name">${x.p.name} <span class="badge ${x.p.team}">${x.p.team}</span> <span class="chev">&rsaquo;</span></td><td>$${x.amt.toFixed(2)}</td></tr>`).join('');
+  return `
+    ${state.locked ? '<div class="lockbar">&#128274; Viewing only. Tap "Locked" at the top to enter your PIN and make edits.</div>' : ''}
+    <div class="banner">
+      <div class="muted" style="color:#D9DFCE;">The Bandon Cup</div>
+      <div class="score"><span>${cupA}</span> &ndash; <span>${cupB}</span></div>
+      <div class="muted" style="color:#D9DFCE;">Team A &nbsp;&nbsp;&nbsp; Team B</div>
+      <div style="font-size:12px; margin-top:6px; color:var(--gold);">${leaderText}</div>
+    </div>
+    <h2 class="section-title">Round-by-round</h2>
+    <div class="card">
+      <table><thead><tr><th style="text-align:left;">Course</th><th>Team A pts</th><th>Team B pts</th><th>Winner</th></tr></thead><tbody>${roundRows}</tbody></table>
+      <p class="muted" style="margin-top:8px;">Tap a course to see how the point was won, hole by hole.</p>
+    </div>
+    <h2 class="section-title">Medalist &mdash; net Stableford</h2>
+    <div class="card">
+      <table><thead><tr><th>#</th><th style="text-align:left;">Player</th><th>Pts</th><th>Rounds</th></tr></thead><tbody>${medalRows}</tbody></table>
+      <p class="muted" style="margin-top:8px;">Best-ball points per hole (net double-bogey capped) across the ${fullRounds.length} championship rounds. Tap a player to see their round-by-round breakdown.</p>
+    </div>
+    <h2 class="section-title">&#128176; Skins Pot &mdash; championship rounds</h2>
+    <div class="card">
+      <table><thead><tr><th style="text-align:left;">Player</th><th>Winnings</th></tr></thead><tbody>${moneyRowsLB}</tbody></table>
+      <p class="muted" style="margin-top:8px;">Net score wins each hole (gross on par-3s). One clear winner or no skin — no carryovers. $${potGrandTotal.toFixed(2)} across ${fullRounds.length} rounds so far. Tap a player to see which holes they won.</p>
+    </div>
+    <h2 class="section-title">Skins Game &mdash; short courses</h2>
+    <div class="card">
+      <table><thead><tr><th style="text-align:left;">Player</th><th>Points</th></tr></thead><tbody>${skinsRows}</tbody></table>
+      <p class="muted" style="margin-top:8px;">Birdie/Par/Bogey points with escalating stakes, ${shortRounds.map(r=>r.course).filter((v,i,a)=>a.indexOf(v)===i).join(' + ')}. No carryovers — every hole has a winner.</p>
+    </div>
+  `;
+}
+
+/* ---------------- RENDER: PLAYERS ---------------- */
+function renderPlayers(){
+  const teeOptions = ['Black','Green','Gold','Orange','Royal Blue','Blue','Resort'];
+  const dis = state.locked ? 'disabled' : '';
+  const rows = state.players.map(p=>`
+    <div class="card" style="margin-bottom:10px;">
+      <div class="flex between">
+        <div>
+          <div style="font-family:var(--font-display); font-size:17px;">${p.name}</div>
+          <span class="badge ${p.team}">Team ${p.team}</span>
+        </div>
+        <div style="text-align:right;">
+          <label class="field" style="margin:0 0 3px;">Handicap Index</label>
+          <input type="number" step="0.1" ${dis} style="width:90px; text-align:center;" value="${p.index}" data-player="${p.id}" data-field="index" />
+        </div>
+      </div>
+      <label class="field">Preferred tee</label>
+      <select ${dis} data-player="${p.id}" data-field="preferredTee">
+        ${teeOptions.map(t=>`<option value="${t}" ${p.preferredTee===t?'selected':''}>${t}</option>`).join('')}
+      </select>
+      <label class="field">Email (for Send Update)</label>
+      <input type="email" ${dis} value="${p.email}" placeholder="name@email.com" data-player="${p.id}" data-field="email" />
+      <label class="field">Mobile number (for Send Update)</label>
+      <input type="tel" ${dis} value="${p.phone}" placeholder="9495551234" data-player="${p.id}" data-field="phone" />
+      ${p.indexHistory && p.indexHistory.length ? `<p class="muted" style="margin-top:6px;">History: ${p.indexHistory.slice(-3).map(h=>`${h.oldIndex}&rarr;${h.newIndex} (${h.date})`).join(', ')}</p>` : ''}
+    </div>
+  `).join('');
+  return `
+    <h2 class="section-title">Players &amp; Teams</h2>
+    <div class="warn">All editing happens right here on your phone — tap "Locked" up top and enter your PIN (default <strong>1234</strong>) to edit anything, and change the PIN below once unlocked. Nothing leaves this phone automatically; use "Publish Update" up top whenever you want to push the latest standings out to everyone's shared link.</div>
+    <div class="card">
+      <button class="btn secondary small" id="changePinBtn" ${state.locked?'disabled':''}>Change PIN</button>
+      <button class="btn secondary small" id="handicapCheckBtn" style="margin-left:8px;">&#9878;&#65039; Handicap Check</button>
+    </div>
+    <div class="card" style="border:1px solid var(--gold);">
+      ${state.teamsFinalized ? `
+        <div style="font-family:var(--font-display); font-size:15px; margin-bottom:4px;">&#9989; Teams are finalized</div>
+        <p class="muted" style="margin:0 0 10px;">Team assignments are locked in for the rest of the trip and can't be changed in this app.</p>
+        <button class="btn gold" id="viewTeamRevealBtn" style="width:100%;">&#127942; View / Send Team Reveal</button>
+      ` : `
+        <div style="font-family:var(--font-display); font-size:15px; margin-bottom:4px;">&#9878;&#65039; Assign Fair Teams</div>
+        <p class="muted" style="margin:0 0 10px;">As the trip gets close and handicaps settle, use this to split the 8 players into the most balanced possible 4-vs-4 teams by Handicap Index. <strong>This can only be done once</strong> &mdash; once confirmed, teams lock in permanently and all scores reset to zero for a clean start. Do this the day before Round 1.</p>
+        <button class="btn gold" id="assignFairTeamsBtn" ${dis} style="width:100%;">&#9878;&#65039; Assign Fair Teams &amp; Lock In</button>
+      `}
+    </div>
+    ${rows}
+    <button class="btn secondary" id="resetBtn" ${dis} style="width:100%; margin-top:6px;">Reset all data for this trip</button>
+  `;
+}
+
+/* ---------------- RENDER: RULES / HOW IT WORKS ---------------- */
+/* ---------------- RENDER: TIE-BREAKER ---------------- */
+function renderTiebreaker(){
+  const r = computeTiebreakerResult();
+  if(!r.active){
+    return `<h2 class="section-title">Tie-Breaker</h2><div class="card"><p class="muted">Not currently needed &mdash; this only shows up if the 6 championship rounds finish dead even on Cup points.</p></div>`;
+  }
+  const rows = r.perCourse.map(c=>`<tr><td class="name">${c.course}</td><td>${c.teamAPts}</td><td>${c.teamBPts}</td></tr>`).join('');
+  const winColor = r.winner==='A' ? 'A' : (r.winner==='B' ? 'B' : 'full');
+  const winText = r.winner==='T' ? "Still tied — that's a first." : `Team ${r.winner} wins the Bandon Cup!`;
+  return `
+    <h2 class="section-title">&#9876;&#65039; Tie-Breaker</h2>
+    <div class="warn" style="background:#FDEDE8; border-color:var(--rust); color:#7A2E1B;">
+      <strong>The 6 championship rounds finished tied ${r.cup.cupA}&ndash;${r.cup.cupB}.</strong> Per the rules, the two short-course skins sessions — Bandon Preserve and Shorty's — combine to decide the Cup.
+    </div>
+    <div class="card">
+      <h2 class="section-title" style="margin-top:0;">Course-by-course points</h2>
+      <table><thead><tr><th style="text-align:left;">Course</th><th>Team A</th><th>Team B</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="muted" style="margin-top:10px;">These are each team's combined Birdie/Par/Bogey skins points from that session (summed across all 4 players on the team), not the individual skins-game standings.</p>
+    </div>
+    <div class="card">
+      <div class="flex between" style="align-items:center;">
+        <span style="font-family:var(--font-display); font-size:15px;">Combined tie-breaker points</span>
+        <span style="font-family:var(--font-display); font-size:20px;">${r.teamAPts} &ndash; ${r.teamBPts}</span>
+      </div>
+    </div>
+    <div class="card" style="text-align:center; border:2px solid var(--gold);">
+      <span class="badge ${winColor}" style="font-size:15px; padding:6px 14px;">${winText}</span>
+    </div>
+    <button class="btn gold" id="sendTiebreakerBtn" style="width:100%; margin-top:4px;">&#128228; Send Tie-Breaker Result</button>
+  `;
+}
+function renderRules(){
+  const teamA = state.players.filter(p=>p.team==='A');
+  const teamB = state.players.filter(p=>p.team==='B');
+  const fullRounds = state.rounds.filter(r=>r.type==='full');
+  const shortRounds = state.rounds.filter(r=>r.type==='short');
+  const teamRow = (p)=>`<tr><td class="name">${p.name}</td><td>${p.index}</td></tr>`;
+  return `
+    <h2 class="section-title">How The Bandon Cup Works</h2>
+    <div class="card">
+      <p style="font-size:13.5px; line-height:1.5;">8 players, 5 days at Bandon Dunes Resort. Two 4-man teams play a Ryder Cup-style team competition across the ${fullRounds.length} full 18-hole rounds, while every player also chases an individual net Stableford title. The ${shortRounds.length} short-course session${shortRounds.length===1?'':'s'} run${shortRounds.length===1?'s':''} as a separate skins game for fun money on the side.</p>
+    </div>
+
+    <h2 class="section-title">The Teams</h2>
+    <div class="card">
+      <div class="flex between" style="align-items:flex-start; gap:16px;">
+        <div style="flex:1;">
+          <span class="badge A">Team A</span>
+          <table style="margin-top:8px;"><thead><tr><th style="text-align:left;">Player</th><th>Index</th></tr></thead><tbody>${teamA.map(teamRow).join('')}</tbody></table>
+        </div>
+        <div style="flex:1;">
+          <span class="badge B">Team B</span>
+          <table style="margin-top:8px;"><thead><tr><th style="text-align:left;">Player</th><th>Index</th></tr></thead><tbody>${teamB.map(teamRow).join('')}</tbody></table>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:10px;">Teams were split to be as fair as possible by Handicap Index &mdash; every possible 4-vs-4 combination was checked to find the smallest gap between sides.</p>
+    </div>
+
+    <h2 class="section-title">The Schedule</h2>
+    <div class="card">
+      <table>
+        <thead><tr><th style="text-align:left;">Day</th><th style="text-align:left;">Course</th><th>Type</th></tr></thead>
+        <tbody>
+          ${state.rounds.map(rc=>`<tr><td class="name">${rc.date}</td><td class="name">${rc.course}</td><td><span class="badge ${rc.type}">${rc.type==='full'?'Full':'Short'}</span></td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="section-title">The Cup (Team Competition)</h2>
+    <div class="card">
+      <p style="font-size:13.5px; line-height:1.5;">On each of the ${fullRounds.length} full rounds, every player plays their own ball at their own Course Handicap. For each hole, we take the <strong>best net Stableford score</strong> on that hole from each team's foursome — that's a four-ball best-ball format. Add up the best-ball points across all 18 holes and whichever team scores higher wins <strong>1 point</strong> for that round. A tie splits the point 0.5/0.5. Most points across all ${fullRounds.length} rounds wins the Cup.</p>
+      <p class="muted" style="margin-top:8px;">Net Stableford scoring per hole: eagle or better = 4 pts, birdie = 3, par = 2, bogey = 1, double bogey or worse = 0 (net double bogey capped).</p>
+      <div class="plaque" style="margin-top:14px;">
+        <h3>&#9876;&#65039; If The Cup Is Tied</h3>
+        <p style="font-size:13px; line-height:1.55; margin:0;">${shortRounds.map(r=>r.course).filter((v,i,a)=>a.indexOf(v)===i).join(' and ')} run as their <strong>own separate Skins Game</strong> for side money — see below — and normally have nothing to do with the Cup. <strong>But</strong> if, and only if, all ${fullRounds.length} championship rounds finish completely even on Cup points, those two short-course sessions are combined and used as a tie-breaker: each team's Birdie/Par/Bogey skins points from both short courses are added together, and whichever team has more wins the Bandon Cup outright. Once all ${fullRounds.length} championship rounds are complete and the Cup is tied, a "Tie-Break" tab appears in the app showing the course-by-course breakdown and the final result — shareable with the group the same way as everything else.</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Medalist (Individual)</h2>
+    <div class="card">
+      <p style="font-size:13.5px; line-height:1.5;">Independent of the team result, every player's net Stableford points are tracked across all ${fullRounds.length} full rounds. Highest cumulative total at the end of the trip is the individual Medalist — so even if your team comes up short, there's still a trophy on the line.</p>
+    </div>
+
+    <h2 class="section-title">&#128176; Skins Pot (Championship Rounds)</h2>
+    <div class="card">
+      <p style="font-size:13.5px; line-height:1.5;">A separate money game on all ${fullRounds.length} full 18-hole rounds — not the same as the Birdie/Par/Bogey short-course game below. Each player antes up per round (default $10, editable per round in Course Settings); with 8 players that's an $80 pot for that course.</p>
+      <p style="font-size:13.5px; line-height:1.5; margin-top:8px;">On <strong>every hole except par-3s</strong>, the low <strong>net</strong> score (using each player's Course Handicap) wins the hole. On <strong>par-3 holes</strong>, it flips to the low <strong>gross</strong> score instead. Either way, there must be exactly <strong>one</strong> clear low-score winner among all 8 players — if two or more players tie for the best score, nobody wins that hole and <strong>there is no carryover</strong>.</p>
+      <p style="font-size:13.5px; line-height:1.5; margin-top:8px;">At the end of the round, count up how many holes actually produced a clear winner — call it N — and the whole pot splits N ways. A player who wins one of those N holes takes home 1/N of the pot; a player who wins three of them takes home 3/N.</p>
+      <p class="muted" style="margin-top:8px;">Example: $80 pot. If only 1 hole all round has a clean winner, that player takes the full $80. If 5 holes end up with clean winners, the pot splits 5 ways ($16/winning hole) — someone who won 2 of those 5 holes takes home $32.</p>
+    </div>
+
+    <h2 class="section-title">Skins Game (Short Courses)</h2>
+    <div class="card">
+      <p style="font-size:13.5px; line-height:1.5;">${shortRounds.map(r=>r.course).filter((v,i,a)=>a.indexOf(v)===i).join(' + ')} run as a <strong>Birdie/Par/Bogey points game</strong>, not gross skins — with 8 players on a short course, straight low-score skins tie constantly and nothing ever gets won. This fixes that.</p>
+      <table style="margin-top:10px;"><thead><tr><th style="text-align:left;">Result</th><th>Base points</th></tr></thead><tbody>
+        <tr><td class="name">Birdie</td><td>3</td></tr>
+        <tr><td class="name">Par</td><td>1</td></tr>
+        <tr><td class="name">Bogey or worse</td><td>0</td></tr>
+      </tbody></table>
+      <p style="font-size:13.5px; line-height:1.5; margin-top:10px;">Only the <strong>best result on the hole</strong> scores. If one player has the best result, they win the hole's points outright. If multiple players tie for the best result, whoever is <strong>Closest to the Pin</strong> among the tied players wins the points — the others get zero even though they matched the score. If everyone makes bogey or worse, the hole is a push (0 points, no winner needed). <strong>There are no carryovers</strong> — every hole resolves the same day it's played.</p>
+      <p style="font-size:13.5px; line-height:1.5; margin-top:10px;">Stakes escalate as the round goes on — each hole's points are multiplied:</p>
+      <table style="margin-top:6px;"><thead><tr><th style="text-align:left;">Course</th><th>Holes 1&ndash;5 / 1&ndash;7</th><th>Mid holes</th><th>Final holes</th></tr></thead><tbody>
+        <tr><td class="name">13-hole (Preserve)</td><td>1&times; (1&ndash;5)</td><td>2&times; (6&ndash;10)</td><td>4&times; (11&ndash;13)</td></tr>
+        <tr><td class="name">19-hole (Shorty's)</td><td>1&times; (1&ndash;7)</td><td>2&times; (8&ndash;14)</td><td>4&times; (15&ndash;19)</td></tr>
+      </tbody></table>
+      <p class="muted" style="margin-top:8px;">So a birdie is worth 3 points early, 6 points in the middle stretch, and 12 points coming down the stretch.</p>
+      <div class="warn" style="background:#FDEDE8; border-color:var(--rust); color:#7A2E1B;">
+        <strong>RULE: Double-digit-handicap players get a 1-foot allowance on Closest-to-Pin calls.</strong> If a double-digit handicapper's ball is up to one foot farther from the hole than a single-digit handicapper's ball, the group can still rule it the closer ball. This is a judgment call made by the players on the course, not something the app calculates.
+      </div>
+    </div>
+
+    <h2 class="section-title">Handicaps &amp; Tees</h2>
+    <div class="card">
+      <p style="font-size:13.5px; line-height:1.5;">Each player picks a tee box per round (defaulting to their preferred tee, editable any time before the round). Course Handicap is calculated from that tee's Rating and Slope against the player's current Handicap Index. After posting a round to GHIN, update that player's Index on the Players tab — it'll apply to their next unfinalized round. Finalizing a round locks in the exact handicap used so later index changes never rewrite history. The 🎯 Tee box recommendation on each scorecard suggests a tee based on current index and recent trend, fully on-device.</p>
+      <div class="plaque">
+        <h3>&#9878;&#65039; Mid-Trip Handicap Review</h3>
+        <p style="font-size:13px; line-height:1.55; margin:0;">Once the first <strong>3 full rounds</strong> are completely scored, the app automatically compares everyone's actual scoring — against each course's real Rating &amp; Slope — to their posted Handicap Index. If one or more players' play stands out clearly from the rest of the group's pattern, the app will flag it and suggest a look. <strong>The app never changes anyone's handicap on its own</strong> — a human always reviews the suggestion and updates the Index on the Players tab by hand, if at all. This is just a fairness check, not an accusation — courses play differently than their rating on any given day, and posted indexes lag actual form. Consider yourselves warned going in.</p>
+      </div>
+    </div>
+
+    <button class="btn gold" id="sendRulesBtn" style="width:100%; margin-top:4px;">&#128228; Send Rules to Group</button>
+  `;
+}
+
+/* ---------------- RENDER: ROUNDS LIST ---------------- */
+function renderRoundsList(){
+  const items = state.rounds.map(rc=>{
+    const finalized = state.scores[rc.id] && state.scores[rc.id].finalized;
+    const anyScores = state.players.some(p=>getPlayerHoles(rc.id,p.id).some(g=>g!==null));
+    let status = 'Not started';
+    if(finalized) status = 'Finalized ✓'; else if(anyScores) status = 'In progress';
+    return `
+      <div class="round-list-item" data-round="${rc.id}">
+        <div><div class="course">${rc.course}</div><div class="meta">${rc.date} &middot; ${rc.time} &middot; ${status}</div></div>
+        <div class="flex gap8"><span class="badge ${rc.type}">${rc.type==='full'?'Full round':'Short course'}</span><span class="chev">&rsaquo;</span></div>
+      </div>`;
+  }).join('');
+  return `<h2 class="section-title">Trip Schedule</h2><div class="card" style="padding:0 14px;">${items}</div>`;
+}
+
+/* ---------------- RENDER: ROUND DETAIL ---------------- */
+function renderRoundDetail(roundId){
+  const rc = getRound(roundId);
+  const s = state.scores[roundId];
+  const finalized = s && s.finalized;
+  const dis = state.locked ? 'disabled' : '';
+
+  let navSection = '';
+  if(rc.type==='full'){
+    const chipRows = state.players.map(p=>{
+      const holes = getPlayerHoles(roundId, p.id);
+      const done = holes.every(g=>g!==null);
+      return `<div class="player-chip ${p.team} ${done?'done':''}" data-open-player="${p.id}">${p.name}${done?' &#10003;':''}</div>`;
+    }).join('');
+    navSection = `<p class="muted" style="margin:10px 0 6px;">Tap a player to enter scores:</p><div class="grid8">${chipRows}</div>`;
+  } else {
+    const res = computeShortRoundResult(roundId);
+    const holeChips = res.holesData.map(hd=>{
+      let cls = '';
+      let label = `${hd.hole}`;
+      if(hd.needsCtp){ cls = 'needs-ctp'; label += ' &#127919;'; }
+      else if(hd.winnerId){ cls = 'done'; label += ' &#10003;'; }
+      else if(hd.enteredCt>0 && hd.bestCat==='bogey' && hd.enteredCt===state.players.length){ cls = 'push'; label += ' &ndash;'; }
+      else if(hd.enteredCt>0){ cls = 'partial'; }
+      return `<div class="player-chip hole-chip ${cls}" data-open-hole="${hd.hole-1}">${label}</div>`;
+    }).join('');
+    navSection = `<p class="muted" style="margin:10px 0 6px;">Tap a hole to score it (${res.holesData.filter(h=>h.winnerId||((h.bestCat==='bogey')&&h.enteredCt===state.players.length)).length} of ${rc.holes} resolved):</p><div class="grid8">${holeChips}</div>`;
+  }
+
+  let settingsPanel = '';
+  if(rc.type==='full'){
+    const teeRows = rc.tees.map((t,i)=>`
+      <div class="tee-row">
+        <input type="text" ${dis} value="${t.name}" data-round="${roundId}" data-tee-idx="${i}" data-teefield="name">
+        <input type="number" step="0.1" ${dis} value="${t.rating}" data-round="${roundId}" data-tee-idx="${i}" data-teefield="rating" placeholder="Rating">
+        <input type="number" ${dis} value="${t.slope}" data-round="${roundId}" data-tee-idx="${i}" data-teefield="slope" placeholder="Slope">
+        <button class="btn rust small" ${dis} data-remove-tee="${roundId}:${i}">&times;</button>
+      </div>`).join('');
+    settingsPanel = `
+      <details class="collapsible">
+        <summary>Course settings &amp; tees ${rc.verified ? '<span class="badge verified">Preloaded &amp; verified</span>' : '<span class="badge unverified">Preloaded &mdash; double check</span>'}</summary>
+        ${!rc.verified ? `<div class="warn">Tee ratings/slopes are pulled from public course databases and may drift from what's posted at the pro shop. Confirm against the physical scorecard.</div>` : `<div class="warn">Hole pars and stroke index here are from the official scorecard. Still worth double-checking tee ratings against GHIN in case they've changed.</div>`}
+        <label class="field">Tees</label>
+        ${teeRows}
+        <button class="btn secondary small" ${dis} data-add-tee="${roundId}">+ Add tee</button>
+        <label class="field">Hole pars (comma-separated, ${rc.holes} values)</label>
+        <input type="text" ${dis} value="${rc.holePars.join(',')}" data-round="${roundId}" data-rfield="holePars">
+        <label class="field">Stroke index / handicap ranking (1 = hardest hole)</label>
+        <input type="text" ${dis} value="${rc.strokeIndex.join(',')}" data-round="${roundId}" data-rfield="strokeIndex">
+        <label class="field">Skins pot buy-in per player ($)</label>
+        <input type="number" min="0" step="1" ${dis} value="${rc.buyIn}" data-round="${roundId}" data-rfield="buyIn">
+      </details>`;
+  } else {
+    settingsPanel = `<details class="collapsible"><summary>Course settings</summary>
+      <label class="field">Number of holes</label>
+      <input type="number" ${dis} value="${rc.holes}" data-round="${roundId}" data-rfield="holes">
+      <p class="muted" style="margin-top:6px;">Stakes escalator uses this hole count automatically (13-hole and 19-hole courses use your exact tiers; other counts fall back to a proportional 40/35/25 split).</p>
+    </details>`;
+  }
+
+  let summary = '';
+  if(rc.type==='full'){
+    const res = computeFullRoundResult(roundId);
+    const rows = state.players.map(p=>{
+      const r = res.perPlayer[p.id];
+      return `<tr><td class="name">${p.name}</td><td>${r.teeName||'&mdash;'}</td><td>${r.ch}</td><td>${r.played?r.grossTotal:'&mdash;'}</td><td>${r.played?r.netPtsTotal:'&mdash;'}</td></tr>`;
+    }).join('');
+    const money = computeMoneySkinsResult(roundId);
+    const resolvedCt = money.holesData.filter(h=>h.winnerId).length;
+    const moneyRows = state.players.map(p=>`<tr><td class="name">${p.name}</td><td>$${money.winnings[p.id].toFixed(2)}</td></tr>`).join('');
+    const moneyHoleLines = money.holesData.map(hd=>{
+      let label;
+      if(hd.winnerId) label = `${getPlayer(hd.winnerId).name} &mdash; $${hd.value.toFixed(2)}`;
+      else if(hd.tie) label = 'Tied &mdash; no skin';
+      else if(hd.enteredCt>0) label = 'In progress&hellip;';
+      else label = '&mdash;';
+      return `<div class="skins-hole"><span>Hole ${hd.hole} <span class="muted">(par ${hd.par}${hd.isPar3?' &middot; gross':' &middot; net'})</span></span><span>${label}</span></div>`;
+    }).join('');
+    summary = `
+      <div class="card">
+        <div class="flex between" style="margin-bottom:6px;"><strong style="font-family:var(--font-display); font-size:15px;">Team totals (net Stableford)</strong></div>
+        <div class="flex between" style="margin-bottom:10px;"><span class="badge A">Team A: ${res.teamA}</span><span class="badge B">Team B: ${res.teamB}</span></div>
+        <table><thead><tr><th style="text-align:left;">Player</th><th>Tee</th><th>CH</th><th>Gross</th><th>Net pts</th></tr></thead><tbody>${rows}</tbody></table>
+      </div>
+      <div class="card">
+        <strong style="font-family:var(--font-display); font-size:15px;">&#128176; Skins Pot</strong>
+        <p class="muted" style="margin:4px 0 10px;">$${money.buyIn} &times; ${state.players.length} players = $${money.potTotal.toFixed(2)} pot &middot; ${resolvedCt} hole${resolvedCt===1?'':'s'} with a clear winner so far${resolvedCt>0?` &middot; pot splits ${resolvedCt} way${resolvedCt===1?'':'s'} = $${money.perHoleShare.toFixed(2)}/winning hole`:''} &middot; par-3s use gross, other holes use net &middot; no carryovers</p>
+        <table><thead><tr><th style="text-align:left;">Player</th><th>Winnings</th></tr></thead><tbody>${moneyRows}</tbody></table>
+        <details class="collapsible" style="margin-top:10px;"><summary>Hole-by-hole</summary><div style="margin-top:6px;">${moneyHoleLines}</div></details>
+      </div>`;
+  } else {
+    const res = computeShortRoundResult(roundId);
+    const holeLines = res.holesData.map(hd=>{
+      let label;
+      if(hd.needsCtp) label = `&#127919; Needs Closest to Pin (${hd.tiedIds.map(id=>getPlayer(id).name).join(' vs ')})`;
+      else if(hd.winnerId) label = `${getPlayer(hd.winnerId).name} &mdash; ${hd.bestCat} &times;${hd.mult} = ${hd.points} pts`;
+      else if(hd.enteredCt>0 && hd.bestCat==='bogey') label = 'Bogey+ for the field &mdash; 0 pts (push)';
+      else if(hd.enteredCt>0) label = 'In progress&hellip;';
+      else label = '&mdash;';
+      return `<div class="skins-hole"><span>Hole ${hd.hole} <span class="muted">(&times;${hd.mult})</span></span><span>${label}</span></div>`;
+    }).join('');
+    const skinRows = state.players.map(p=>`<tr><td class="name">${p.name}</td><td>${res.skinsCount[p.id]}</td></tr>`).join('');
+    summary = `
+      <div class="card"><strong style="font-family:var(--font-display); font-size:15px;">Results by hole</strong><div style="margin-top:6px;">${holeLines}</div></div>
+      <div class="card"><strong style="font-family:var(--font-display); font-size:15px;">Points standings this session</strong>
+        <table style="margin-top:6px;"><thead><tr><th style="text-align:left;">Player</th><th>Points</th></tr></thead><tbody>${skinRows}</tbody></table>
+      </div>`;
+  }
+  const finalizeBtn = rc.type==='full' ? `
+    <button class="btn ${finalized?'secondary':''}" id="finalizeBtn" ${dis} data-round="${roundId}" style="width:100%; margin:10px 0;">
+      ${finalized ? 'Unlock to edit' : 'Finalize round (lock in handicaps)'}
+    </button>` : '';
+  return `
+    <button class="btn secondary small" id="backToRounds" style="margin-bottom:10px;">&larr; All rounds</button>
+    <h2 class="section-title">${rc.course}</h2>
+    <p class="muted">${rc.date} &middot; ${rc.time} ${finalized?' &middot; <strong style="color:var(--green);">Finalized ✓</strong>':''}</p>
+    ${settingsPanel}
+    <button class="btn secondary" id="openImportBtn" data-round="${roundId}" style="width:100%; margin:10px 0 4px;">&#128229; Bulk Import Scores</button>
+    ${navSection}
+    ${finalizeBtn}
+    ${summary}
+  `;
+}
+
+/* ---------------- RENDER: SCORE ENTRY ---------------- */
+function scoreButtonsHtml(par, current, roundId, playerId, holeIdx, disabled){
+  const min = Math.max(1, par-2);
+  const max = par+4;
+  let btns = '';
+  for(let v=min; v<=max; v++){
+    const diff = v-par;
+    let tag;
+    if(diff<=-2) tag='Eagle+'; else if(diff===-1) tag='Birdie'; else if(diff===0) tag='Par';
+    else if(diff===1) tag='Bogey'; else if(diff===2) tag='Dbl'; else tag='Trip+';
+    const sel = current===v ? 'sel':'';
+    btns += `<button type="button" class="scoreBtn ${sel}" ${disabled?'disabled':''} data-round="${roundId}" data-player="${playerId}" data-hole="${holeIdx}" data-val="${v}"><span class="sv">${v}</span><span class="sl">${tag}</span></button>`;
+  }
+  const isMoreSel = current!==null && current>max;
+  btns += `<button type="button" class="scoreBtn more ${isMoreSel?'sel':''}" ${disabled?'disabled':''} data-round="${roundId}" data-player="${playerId}" data-hole="${holeIdx}" data-val="more"><span class="sv">${isMoreSel?current:(max+1)+'+'}</span><span class="sl">More</span></button>`;
+  return btns;
+}
+function renderScoreEntry(roundId, playerId){
+  const rc = getRound(roundId);
+  const pl = getPlayer(playerId);
+  const holes = getPlayerHoles(roundId, playerId);
+  const finalized = state.scores[roundId] && state.scores[roundId].finalized;
+  const editable = !state.locked && !finalized;
+  const {ch, indexUsed, teeName} = getCHForPlayerRound(roundId, playerId);
+  let out=0,inn=0,outCt=0,inCt=0, filledCt=0;
+  const nextEmptyIdx = holes.findIndex(h=>h===null||h===undefined||h==='');
+  const blocks = [];
+  for(let i=0;i<rc.holes;i++){
+    const par = rc.holePars[i];
+    const recv = rc.type==='full' ? strokesOnHole(ch, rc.holes, rc.strokeIndex, i) : 0;
+    const g = holes[i];
+    const isFilled = g!==null && g!==undefined && g!=='';
+    if(isFilled){
+      filledCt++;
+      if(i < rc.holes/2){ out += Number(g); outCt++; } else { inn += Number(g); inCt++; }
+    }
+    const isNext = !isFilled && i===nextEmptyIdx;
+    blocks.push(`
+      <div class="hole-block${isNext?' hole-next':''}" data-hole-index="${i}">
+        <div class="hole-head"><div class="hleft"><span class="hnum">${i+1}</span><span class="hpar">Par ${par}</span>${recv>0 ? '<span class="dot">'+'&bull;'.repeat(recv)+'</span>' : ''}${isNext?'<span class="badge gold-badge">Next</span>':''}</div></div>
+        <div class="btnrow">${scoreButtonsHtml(par, isFilled?Number(g):null, roundId, playerId, i, !editable)}</div>
+      </div>`);
+  }
+  const teeSelector = rc.type==='full' && rc.tees && rc.tees.length ? `
+    <div class="tee-select-row">
+      <select id="teeSelect" ${editable?'':'disabled'}>
+        ${rc.tees.map(t=>`<option value="${t.name}" ${t.name===teeName?'selected':''}>${t.name} (${t.rating}/${t.slope})</option>`).join('')}
+      </select>
+      <button class="tee-pop-btn" id="openTeeModalBtn" type="button">&#127967; Tee box recommendation</button>
+    </div>` : '';
+  const pct = Math.round((filledCt/rc.holes)*100);
+  const allDone = filledCt===rc.holes;
+  return `
+    <button class="btn secondary small" id="backToRoundDetail" style="margin-bottom:10px;">&larr; ${rc.course}</button>
+    <h2 class="section-title">${pl.name} <span class="badge ${pl.team}">Team ${pl.team}</span></h2>
+    ${rc.type==='full' ? `<p class="muted">Index used: ${indexUsed} &middot; Playing: ${teeName} &middot; Course Handicap: ${ch}</p>` : `<p class="muted">Gross scores only &mdash; this session feeds the skins game.</p>`}
+    ${!editable && !state.locked ? '' : (!editable ? '<div class="warn">This round is finalized. Unlock it from the Round screen to make changes.</div>' : '')}
+    <div class="progress-sticky">
+      <div class="progress-wrap"><div class="progress-fill" style="width:${pct}%; background:${allDone?'var(--gold)':'var(--green)'};"></div></div>
+      <div class="progress-label">${filledCt} of ${rc.holes} holes entered${allDone?' — all set!':''}</div>
+    </div>
+    ${teeSelector}
+    <div class="card">
+      ${blocks.join('')}
+      ${rc.holes>=18 ? `<div class="out-in"><span>OUT: ${outCt? out : '&mdash;'}</span><span>IN: ${inCt? inn : '&mdash;'}</span><span>TOTAL: ${(outCt+inCt)? out+inn : '&mdash;'}</span></div>` : `<div class="out-in"><span>TOTAL: ${(outCt+inCt)? out+inn : '&mdash;'}</span></div>`}
+      <button class="btn ${allDone?'gold':''}" id="finishEntryBtn" data-round="${roundId}" data-player="${playerId}" style="width:100%; margin-top:12px;">&#9989; Finish Entry</button>
+      <button class="btn rust" id="resetScoresBtn" data-round="${roundId}" data-player="${playerId}" ${editable?'':'disabled'} style="width:100%; margin-top:8px;">&#8635; Reset Scores to Default</button>
+    </div>
+  `;
+}
+
+/* ---------------- RENDER: HOLE ENTRY (short courses — Birdie/Par/Bogey + Closest to Pin) ---------------- */
+function renderHoleEntry(roundId, holeIdx){
+  const rc = getRound(roundId);
+  const s = ensureRoundScoreObj(roundId);
+  const finalized = s.finalized;
+  const editable = !state.locked && !finalized;
+  const par = rc.holePars && rc.holePars[holeIdx] ? rc.holePars[holeIdx] : 3;
+  const mult = getStakeMultiplier(rc.holes, holeIdx+1);
+  const birdiePts = 3*mult, parPts = 1*mult;
+
+  const entries = {};
+  state.players.forEach(p=>{ entries[p.id] = getPlayerHoles(roundId, p.id)[holeIdx] || null; });
+
+  const rows = state.players.map(p=>{
+    const cur = entries[p.id];
+    const mk = (cat, label)=> `<button type="button" class="catBtn ${cat} ${cur===cat?'sel':''}" ${editable?'':'disabled'} data-cat-btn data-round="${roundId}" data-player="${p.id}" data-hole="${holeIdx}" data-cat="${cat}">${label}</button>`;
+    return `
+      <div class="cat-row">
+        <div class="cat-row-head"><span class="cat-name" style="color:${p.team==='A'?'var(--green)':'var(--rust)'};">${p.name}</span><span class="badge ${p.team}">${p.team}</span></div>
+        <div class="cat-buttons">${mk('birdie',`Birdie (${birdiePts})`)}${mk('par',`Par (${parPts})`)}${mk('bogey','Bogey+ (0)')}</div>
+      </div>`;
+  }).join('');
+
+  // detect tie needing CTP
+  const enteredIds = state.players.filter(p=>entries[p.id]).map(p=>p.id);
+  let bestCat = null, tiedIds = [];
+  if(enteredIds.length){
+    let bestRank = -1;
+    enteredIds.forEach(pid=>{ const r = CAT_RANK[entries[pid]]; if(r>bestRank) bestRank = r; });
+    bestCat = Object.keys(CAT_RANK).find(k=>CAT_RANK[k]===bestRank);
+    tiedIds = enteredIds.filter(pid=> entries[pid]===bestCat);
+  }
+  const currentCtp = s.ctpWinners[holeIdx];
+  let ctpSection = '';
+  let resultBanner = '';
+  if(bestCat && bestCat!=='bogey' && tiedIds.length>1){
+    const ctpBtns = tiedIds.map(pid=>{
+      const pl = getPlayer(pid);
+      return `<button type="button" class="ctpBtn ${currentCtp===pid?'sel':''}" ${editable?'':'disabled'} data-ctp-btn data-round="${roundId}" data-hole="${holeIdx}" data-player="${pid}">${pl.name}</button>`;
+    }).join('');
+    ctpSection = `
+      <div class="ctp-box">
+        <strong>&#127919; Closest to Pin &mdash; tied at ${bestCat}</strong>
+        <p class="muted" style="margin:4px 0 0;">Tap whoever's ball was closest to the hole. Remember the double-digit-handicap allowance if it applies (see Rules tab).</p>
+        <div class="ctp-buttons">${ctpBtns}</div>
+      </div>`;
+    if(currentCtp && tiedIds.includes(currentCtp)){
+      resultBanner = `<div class="hole-result-banner win"><strong>${getPlayer(currentCtp).name}</strong> wins the hole &mdash; ${bestCat} &times;${mult} = <strong>${bestCat==='birdie'?birdiePts:parPts} pts</strong></div>`;
+    } else {
+      resultBanner = `<div class="hole-result-banner wait">Waiting on Closest to Pin to settle the tie between ${tiedIds.map(id=>getPlayer(id).name).join(' &amp; ')}.</div>`;
+    }
+  } else if(bestCat && bestCat!=='bogey' && tiedIds.length===1){
+    resultBanner = `<div class="hole-result-banner win"><strong>${getPlayer(tiedIds[0]).name}</strong> wins the hole &mdash; ${bestCat} &times;${mult} = <strong>${bestCat==='birdie'?birdiePts:parPts} pts</strong></div>`;
+  } else if(bestCat==='bogey' && enteredIds.length===state.players.length){
+    resultBanner = `<div class="hole-result-banner push">Nobody made par or better &mdash; this hole's a push, 0 pts.</div>`;
+  } else if(enteredIds.length>0){
+    resultBanner = `<div class="hole-result-banner wait">${enteredIds.length} of ${state.players.length} entered&hellip;</div>`;
+  }
+
+  const isFirst = holeIdx===0, isLast = holeIdx===rc.holes-1;
+  return `
+    <button class="btn secondary small" id="backToRoundDetail" style="margin-bottom:10px;">&larr; ${rc.course}</button>
+    <h2 class="section-title">Hole ${holeIdx+1} of ${rc.holes} <span class="muted" style="font-weight:400;">&middot; Par ${par}</span></h2>
+    <div class="stakes-badge">&times;${mult} stakes &mdash; Birdie ${birdiePts} pts &middot; Par ${parPts} pts</div>
+    <div class="card">
+      ${rows}
+    </div>
+    ${ctpSection}
+    ${resultBanner}
+    <button class="btn rust" id="resetHoleBtn" ${editable?'':'disabled'} data-round="${roundId}" data-hole="${holeIdx}" style="width:100%; margin-top:14px;">&#8635; Reset This Hole</button>
+    <div class="flex gap8" style="margin-top:10px;">
+      <button class="btn secondary" id="prevHoleBtn" ${isFirst?'disabled':''} style="flex:1;">&larr; Prev Hole</button>
+      <button class="btn ${isLast?'gold':''}" id="nextHoleBtn" style="flex:1;">${isLast?'Finish &#9989;':'Next Hole &rarr;'}</button>
+    </div>
+  `;
+}
+function localTeeRecommendation(roundId, playerId){
+  const rc = getRound(roundId);
+  const pl = getPlayer(playerId);
+  if(!rc.tees || rc.tees.length===0) throw new Error('No tees configured for this round');
+
+  const sorted = [...rc.tees].sort((a,b)=> b.slope - a.slope); // hardest (highest slope) first
+  const N = sorted.length;
+  let pos = N===1 ? 0 : Math.round((pl.index/22) * (N-1));
+  pos = Math.max(0, Math.min(N-1, pos));
+
+  const idx = state.rounds.findIndex(r=>r.id===roundId);
+  let lastAvg = null;
+  for(let i=idx-1;i>=0;i--){
+    const rr = state.rounds[i];
+    if(rr.type==='full' && state.scores[rr.id] && state.scores[rr.id].finalized){
+      const res = computeFullRoundResult(rr.id);
+      const pr = res.perPlayer[playerId];
+      if(pr && pr.played>0){ lastAvg = pr.netPtsTotal / pr.played; break; }
+    }
+  }
+  let indexDelta = 0;
+  if(pl.indexHistory && pl.indexHistory.length){
+    const last = pl.indexHistory[pl.indexHistory.length-1];
+    indexDelta = last.newIndex - last.oldIndex;
+  }
+
+  let trendNote = '';
+  if(N>1){
+    if((lastAvg!==null && lastAvg>=2.2) || indexDelta < -0.5){
+      if(pos>0){ pos -= 1; trendNote = lastAvg!==null && lastAvg>=2.2 ? "you played well net last time out, so let's bump it up a notch" : "your index has been trending down"; }
+    } else if((lastAvg!==null && lastAvg<1.4) || indexDelta > 0.5){
+      if(pos<N-1){ pos += 1; trendNote = lastAvg!==null && lastAvg<1.4 ? "last round was a grind, so let's play it a bit more forward" : "your index has been trending up"; }
+    }
+  }
+
+  const tee = sorted[pos];
+  let reason;
+  if(N===1){
+    reason = `Only one tee is loaded for ${rc.course} right now — add more options in Course Settings for a real choice.`;
+  } else {
+    reason = trendNote
+      ? `Based on your ${pl.index} index, and since ${trendNote}, ${tee.name} tees look like the right test.`
+      : `Based on your ${pl.index} index, ${tee.name} tees line up well for you here.`;
+  }
+  return { tee: tee.name, reason };
+}
+function openTeeModal(roundId, playerId){
+  try{
+    const rec = localTeeRecommendation(roundId, playerId);
+    state.teeModal = { roundId, playerId, status:'done', data: rec };
+  }catch(e){ console.error(e); state.teeModal = { roundId, playerId, status:'error', data:null }; }
+  renderTeeModal();
+}
+function closeTeeModal(){ state.teeModal = null; renderTeeModal(); }
+function renderTeeModal(){
+  const el = document.getElementById('teeModalOverlay');
+  if(!state.teeModal){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='flex';
+  const { roundId, playerId, status, data } = state.teeModal;
+  const pl = getPlayer(playerId);
+  const rc = getRound(roundId);
+  let body = '';
+  if(status==='loading'){
+    body = `<div class="center" style="padding:22px 0;"><div class="spinner"></div><p class="muted" style="margin-top:10px;">Thinking through ${pl.name}'s tee box&hellip;</p></div>`;
+  } else if(status==='error'){
+    body = `<p class="muted">Couldn't reach the recommendation service (needs internet). Pick a tee manually from the dropdown, or try again.</p>
+      <button class="btn" id="teeModalRetry" style="width:100%; margin-top:6px;">Try again</button>`;
+  } else {
+    const matches = rc.tees.some(t=>t.name===data.tee);
+    body = `
+      <div class="card" style="background:var(--paper-alt); border:none;">
+        <div class="muted" style="text-transform:uppercase; letter-spacing:.04em; font-size:11px;">Recommended</div>
+        <div style="font-family:var(--font-display); font-size:24px; color:var(--green-dark);">${data.tee}</div>
+        <p style="font-size:13.5px; margin-top:6px;">${data.reason}</p>
+      </div>
+      ${matches ? `<button class="btn" id="teeModalApply" style="width:100%; margin-top:10px;">Play from ${data.tee}</button>` : `<p class="muted">This course's tee list has changed &mdash; pick manually below.</p>`}
+    `;
+  }
+  el.innerHTML = `<div class="modal-card">
+      <div class="flex between" style="margin-bottom:6px;"><strong style="font-family:var(--font-display); font-size:17px;">Tee box recommendation</strong><button class="btn secondary small" id="teeModalClose" type="button">&times;</button></div>
+      <p class="muted" style="margin:0 0 10px;">${pl.name} &middot; ${rc.course}</p>
+      ${body}
+    </div>`;
+  document.getElementById('teeModalClose').onclick = closeTeeModal;
+  const applyBtn = document.getElementById('teeModalApply');
+  if(applyBtn) applyBtn.onclick = ()=>{
+    const s = ensureRoundScoreObj(roundId);
+    s.playerTee[playerId] = data.tee;
+    saveScores(); closeTeeModal(); render();
+  };
+  const retryBtn = document.getElementById('teeModalRetry');
+  if(retryBtn) retryBtn.onclick = ()=> openTeeModal(roundId, playerId);
+}
+
+/* ---------------- SEND UPDATE (email / text summary) ---------------- */
+function findLatestPlayedRound(){
+  for(let i=state.rounds.length-1;i>=0;i--){
+    const rc = state.rounds[i];
+    if(state.players.some(p=>getPlayerHoles(rc.id,p.id).some(g=>g!==null))) return rc;
+  }
+  return null;
+}
+/* ---------------- GRAPHICAL SUMMARY IMAGE (drawn on-device with canvas, no internet needed) ---------------- */
+function roundRectPath(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  if(ctx.roundRect){ ctx.roundRect(x,y,w,h,r); return; }
+  ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+}
+function wrapCanvasText(ctx, text, maxWidth){
+  const words = text.split(' ');
+  const lines = [];
+  let current = '';
+  words.forEach(w=>{
+    const test = current ? current+' '+w : w;
+    if(ctx.measureText(test).width > maxWidth && current){ lines.push(current); current = w; }
+    else current = test;
+  });
+  if(current) lines.push(current);
+  return lines;
+}
+function generateSummaryCanvas(){
+  const C = { paper:'#F6F2E7', paperAlt:'#EDE6D3', ink:'#22281F', inkSoft:'#5B6355', green:'#2E4A38', greenDark:'#1C2F22', gold:'#C0913D', rust:'#A5482C', white:'#FFFDF7', line:'#D3C7A6' };
+  const W = 720, padX = 36, innerW = W - padX*2;
+  const scratch = document.createElement('canvas');
+  scratch.width = W; scratch.height = 3000;
+  const ctx = scratch.getContext('2d');
+  ctx.fillStyle = C.paper; ctx.fillRect(0,0,W,scratch.height);
+
+  // gather data
+  let cupA=0, cupB=0;
+  const fullRounds = state.rounds.filter(r=>r.type==='full');
+  const roundRows = fullRounds.map(rc=>{
+    const res = computeFullRoundResult(rc.id);
+    const played = state.players.some(p=>getPlayerHoles(rc.id,p.id).some(g=>g!==null));
+    let tag=null;
+    if(played){
+      if(res.teamA>res.teamB){ cupA+=1; tag='A'; } else if(res.teamB>res.teamA){ cupB+=1; tag='B'; } else { cupA+=0.5; cupB+=0.5; tag='T'; }
+    }
+    return { course:rc.course, teamA:res.teamA, teamB:res.teamB, tag, played };
+  });
+  const latest = findLatestPlayedRound();
+  let latestRows = [];
+  if(latest){
+    if(latest.type==='full'){
+      const res = computeFullRoundResult(latest.id);
+      const list = state.players.map(p=>({p, r: res.perPlayer[p.id]})).filter(x=>x.r.played>0);
+      list.sort((a,b)=> b.r.netPtsTotal - a.r.netPtsTotal);
+      let rank=0, prevPts=null, shown=0;
+      list.forEach(x=>{ shown++; if(x.r.netPtsTotal!==prevPts){ rank=shown; prevPts=x.r.netPtsTotal; } latestRows.push({ rank, name:x.p.name, team:x.p.team, value:`${x.r.grossTotal} gross · ${x.r.netPtsTotal} pts` }); });
+    } else {
+      const ranking = shortRoundRanking(latest.id);
+      ranking.forEach(x=> latestRows.push({ rank:x.rank, name:x.p.name, team:x.p.team, value:`${x.points} pts` }));
+    }
+  }
+  const medal = state.players.map(pl=>{
+    let total=0, rp=0;
+    fullRounds.forEach(rc=>{ const res=computeFullRoundResult(rc.id); if(res.perPlayer[pl.id].played>0){ total+=res.perPlayer[pl.id].netPtsTotal; rp++; } });
+    return {pl,total,rp};
+  }).sort((a,b)=>b.total-a.total).filter(m=>m.rp>0);
+  const maxMedal = medal.length ? Math.max(...medal.map(m=>m.total),1) : 1;
+  const shortRounds = state.rounds.filter(r=>r.type==='short');
+  const skinsTotals = {}; state.players.forEach(p=>skinsTotals[p.id]=0);
+  shortRounds.forEach(rc=>{ const res=computeShortRoundResult(rc.id); Object.keys(res.skinsCount).forEach(pid=>skinsTotals[pid]+=res.skinsCount[pid]); });
+  const skinsRows = state.players.map(p=>({p,c:skinsTotals[p.id]})).sort((a,b)=>b.c-a.c).filter(x=>x.c>0);
+  const moneyTotalsC = {}; state.players.forEach(p=>moneyTotalsC[p.id]=0);
+  let potGrandTotalC = 0;
+  fullRounds.forEach(rc=>{ const m=computeMoneySkinsResult(rc.id); potGrandTotalC+=m.potTotal; state.players.forEach(p=> moneyTotalsC[p.id]+=m.winnings[p.id]); });
+  const moneyRowsC = state.players.map(p=>({p,amt:moneyTotalsC[p.id]})).sort((a,b)=>b.amt-a.amt).filter(x=>x.amt>0);
+
+  let y = 0;
+  // header banner
+  const headerH = 158;
+  ctx.fillStyle = C.green; ctx.fillRect(0,0,W,headerH);
+  ctx.fillStyle = C.gold; ctx.fillRect(0,headerH-5,W,5);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = C.gold; ctx.font = '600 13px Georgia, serif';
+  ctx.fillText('AUG 27–31, 2026  ·  BANDON DUNES', W/2, 34);
+  ctx.fillStyle = C.white; ctx.font = '700 36px Georgia, serif';
+  ctx.fillText('The Bandon Cup', W/2, 76);
+  ctx.font = '700 48px Georgia, serif'; ctx.fillStyle = C.gold;
+  ctx.fillText(`${cupA}  –  ${cupB}`, W/2, 128);
+  ctx.font = '12px -apple-system, sans-serif'; ctx.fillStyle = '#D9DFCE';
+  const leaderText = cupA===cupB ? 'Cup is knotted up' : (cupA>cupB ? 'Team A leads the Cup' : 'Team B leads the Cup');
+  ctx.fillText(`Team A            Team B   ·   ${leaderText}`, W/2, 146);
+  y = headerH + 28;
+
+  function sectionTitle(title){
+    ctx.textAlign='left'; ctx.fillStyle = C.greenDark; ctx.font = '700 19px Georgia, serif';
+    ctx.fillText(title, padX, y); y += 12;
+    ctx.strokeStyle = C.line; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(padX,y); ctx.lineTo(W-padX,y); ctx.stroke();
+    y += 22;
+  }
+  function teamTag(text, tag, rowY){
+    if(!tag) return;
+    const col = tag==='A' ? C.green : (tag==='B' ? C.rust : C.inkSoft);
+    ctx.font = '700 15px -apple-system, sans-serif';
+    const tw = ctx.measureText(text).width;
+    ctx.fillStyle = col;
+    roundRectPath(ctx, padX+tw+10, rowY-15, 22, 18, 4); ctx.fill();
+    ctx.fillStyle = C.white; ctx.font='700 10px ui-monospace, monospace'; ctx.textAlign='center';
+    ctx.fillText(tag, padX+tw+21, rowY-2);
+    ctx.textAlign='left';
+  }
+  function simpleRow(label, value, opts={}){
+    const rowH = 30;
+    if(opts.highlight){ ctx.fillStyle = C.paperAlt; ctx.fillRect(padX-10, y-20, innerW+20, rowH); }
+    ctx.textAlign='left'; ctx.font = (opts.bold?'700 ':'600 ')+'15px -apple-system, sans-serif';
+    ctx.fillStyle = opts.labelColor || C.ink;
+    ctx.fillText(label, padX, y);
+    if(opts.tag) teamTag(label, opts.tag, y);
+    ctx.textAlign='right'; ctx.font = '700 14px ui-monospace, monospace';
+    ctx.fillStyle = opts.valueColor || C.ink;
+    ctx.fillText(value, W-padX, y);
+    y += rowH;
+  }
+
+  // round-by-round
+  sectionTitle('ROUND-BY-ROUND');
+  roundRows.forEach(r=>{
+    simpleRow(r.course, r.played ? `A ${r.teamA} – B ${r.teamB}` : 'not started', { tag: r.played?r.tag:null });
+  });
+  y += 16;
+
+  // latest round
+  if(latestRows.length){
+    sectionTitle(`LATEST — ${latest.course.toUpperCase()}`);
+    latestRows.forEach(r=>{
+      simpleRow(`${r.rank}. ${r.name}`, r.value, { highlight:r.rank===1, labelColor: r.team==='A'?C.green:C.rust });
+    });
+    y += 16;
+  }
+
+  // medalist with mini bar chart
+  if(medal.length){
+    sectionTitle('MEDALIST — NET STABLEFORD');
+    medal.forEach((m,i)=>{
+      const rowH = 34;
+      if(i===0){ ctx.fillStyle = C.paperAlt; ctx.fillRect(padX-10, y-20, innerW+20, rowH); }
+      ctx.textAlign='left'; ctx.font = (i===0?'700 ':'600 ')+'15px -apple-system, sans-serif';
+      ctx.fillStyle = m.pl.team==='A' ? C.green : C.rust;
+      const label = `${i+1}. ${m.pl.name}`;
+      ctx.fillText(label, padX, y);
+      // bar
+      const barX = padX + 190, barMaxW = 300, barH = 10;
+      const bw = Math.max(4, (m.total/maxMedal)*barMaxW);
+      ctx.fillStyle = C.line; roundRectPath(ctx, barX, y-10, barMaxW, barH, 5); ctx.fill();
+      ctx.fillStyle = i===0 ? C.gold : C.green; roundRectPath(ctx, barX, y-10, bw, barH, 5); ctx.fill();
+      ctx.textAlign='right'; ctx.font='700 14px ui-monospace, monospace'; ctx.fillStyle = C.ink;
+      ctx.fillText(`${m.total} pts`, W-padX, y);
+      y += rowH;
+    });
+    y += 16;
+  }
+
+  // championship skins pot (money game)
+  if(moneyRowsC.length){
+    sectionTitle(`SKINS POT — $${potGrandTotalC.toFixed(2)} IN PLAY`);
+    moneyRowsC.forEach((x,i)=>{
+      simpleRow(x.p.name, `$${x.amt.toFixed(2)}`, { highlight:i===0, labelColor: x.p.team==='A'?C.green:C.rust });
+    });
+    y += 16;
+  }
+
+  // skins
+  if(skinsRows.length){
+    sectionTitle('SKINS GAME — POINTS');
+    skinsRows.forEach((x,i)=>{
+      simpleRow(x.p.name, `${x.c} pts`, { highlight:i===0, labelColor: x.p.team==='A'?C.green:C.rust });
+    });
+    y += 10;
+  }
+
+  // footer
+  ctx.textAlign='center'; ctx.font='italic 12px Georgia, serif'; ctx.fillStyle = C.inkSoft;
+  ctx.fillText('— The Bandon Cup app', W/2, y+18);
+  y += 40;
+
+  const finalH = Math.ceil(y);
+  const finalCanvas = document.createElement('canvas');
+  finalCanvas.width = W; finalCanvas.height = finalH;
+  const fctx = finalCanvas.getContext('2d');
+  fctx.drawImage(scratch, 0, 0, W, finalH, 0, 0, W, finalH);
+  return finalCanvas;
+}
+
+function generatePlayerSkinsCanvas(playerId){
+  const pl = getPlayer(playerId);
+  const b = computePlayerSkinsBreakdown(playerId);
+  const C = { paper:'#F6F2E7', paperAlt:'#EDE6D3', ink:'#22281F', inkSoft:'#5B6355', green:'#2E4A38', greenDark:'#1C2F22', gold:'#C0913D', rust:'#A5482C', white:'#FFFDF7', line:'#D3C7A6' };
+  const W = 720, padX = 36, innerW = W - padX*2;
+  const scratch = document.createElement('canvas');
+  scratch.width = W; scratch.height = 3000;
+  const ctx = scratch.getContext('2d');
+  ctx.fillStyle = C.paper; ctx.fillRect(0,0,W,scratch.height);
+
+  let y = 0;
+  const headerH = 150;
+  const teamColor = pl.team==='A' ? C.green : C.rust;
+  ctx.fillStyle = teamColor; ctx.fillRect(0,0,W,headerH);
+  ctx.fillStyle = C.gold; ctx.fillRect(0,headerH-5,W,5);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = C.gold; ctx.font = '600 13px Georgia, serif';
+  ctx.fillText('THE BANDON CUP  ·  SKINS POT BREAKDOWN', W/2, 34);
+  ctx.fillStyle = C.white; ctx.font = '700 34px Georgia, serif';
+  ctx.fillText(`${pl.name}`, W/2, 76);
+  ctx.font = '700 44px Georgia, serif'; ctx.fillStyle = C.gold;
+  ctx.fillText(`$${b.grandTotal.toFixed(2)}`, W/2, 126);
+  ctx.font = '12px -apple-system, sans-serif'; ctx.fillStyle = '#EFE9DC';
+  ctx.fillText('Total championship skins winnings so far', W/2, 144);
+  y = headerH + 28;
+
+  function sectionTitle(title){
+    ctx.textAlign='left'; ctx.fillStyle = C.greenDark; ctx.font = '700 18px Georgia, serif';
+    ctx.fillText(title, padX, y); y += 12;
+    ctx.strokeStyle = C.line; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(padX,y); ctx.lineTo(W-padX,y); ctx.stroke();
+    y += 22;
+  }
+
+  if(!b.courses.length){
+    ctx.textAlign='left'; ctx.fillStyle = C.inkSoft; ctx.font = '15px -apple-system, sans-serif';
+    ctx.fillText('No skins won yet — check back after more rounds.', padX, y);
+    y += 30;
+  }
+  b.courses.forEach(c=>{
+    sectionTitle(`${c.course.toUpperCase()}  —  $${c.subtotal.toFixed(2)}`);
+    c.holes.forEach(h=>{
+      const rowH = 28;
+      ctx.textAlign='left'; ctx.font = '600 14px -apple-system, sans-serif'; ctx.fillStyle = C.ink;
+      ctx.fillText(`Hole ${h.hole}  ·  Par ${h.par}  ·  ${h.isPar3?'gross':'net'}`, padX, y);
+      ctx.textAlign='right'; ctx.font = '700 14px ui-monospace, monospace'; ctx.fillStyle = teamColor;
+      ctx.fillText(`$${h.value.toFixed(2)}`, W-padX, y);
+      y += rowH;
+    });
+    y += 14;
+  });
+
+  ctx.textAlign='center'; ctx.font='italic 12px Georgia, serif'; ctx.fillStyle = C.inkSoft;
+  ctx.fillText('— The Bandon Cup app', W/2, y+18);
+  y += 40;
+
+  const finalH2 = Math.ceil(y);
+  const finalCanvas2 = document.createElement('canvas');
+  finalCanvas2.width = W; finalCanvas2.height = finalH2;
+  const fctx2 = finalCanvas2.getContext('2d');
+  fctx2.drawImage(scratch, 0, 0, W, finalH2, 0, 0, W, finalH2);
+  return finalCanvas2;
+}
+function buildPlayerSkinsText(playerId){
+  const pl = getPlayer(playerId);
+  const b = computePlayerSkinsBreakdown(playerId);
+  let lines = [];
+  lines.push(`${pl.name.toUpperCase()} -- SKINS POT BREAKDOWN`);
+  lines.push('');
+  lines.push(`TOTAL WINNINGS: $${b.grandTotal.toFixed(2)}`);
+  lines.push('');
+  if(!b.courses.length){
+    lines.push('No skins won yet.');
+  } else {
+    b.courses.forEach(c=>{
+      lines.push(`${c.course} (${c.date}) -- $${c.subtotal.toFixed(2)}`);
+      c.holes.forEach(h=> lines.push(`  Hole ${h.hole} (par ${h.par}, ${h.isPar3?'gross':'net'}) -- $${h.value.toFixed(2)}`));
+    });
+  }
+  lines.push('');
+  lines.push('-- sent from The Bandon Cup app');
+  return lines.join('\n');
+}
+function buildRoundBreakdownText(roundId){
+  const rc = getRound(roundId);
+  const b = computeRoundWinnerBreakdown(roundId);
+  let lines = [];
+  lines.push(`${rc.course.toUpperCase()} -- HOW THE CUP POINT WAS WON`);
+  lines.push('');
+  lines.push(`FINAL: Team A ${b.teamA} - Team B ${b.teamB}`);
+  lines.push('');
+  b.holesData.forEach(hd=>{
+    const aName = hd.bestAId ? getPlayer(hd.bestAId).name : '--';
+    const bName = hd.bestBId ? getPlayer(hd.bestBId).name : '--';
+    const tag = hd.winner==='A' ? '(A)' : hd.winner==='B' ? '(B)' : hd.winner==='T' ? '(tie)' : '';
+    lines.push(`Hole ${hd.hole} (par ${hd.par}): A-${aName} ${hd.bestA===null?'--':hd.bestA}pt vs B-${bName} ${hd.bestB===null?'--':hd.bestB}pt ${tag}`);
+  });
+  lines.push('');
+  lines.push('-- sent from The Bandon Cup app');
+  return lines.join('\n');
+}
+function generateRoundBreakdownCanvas(roundId){
+  const rc = getRound(roundId);
+  const b = computeRoundWinnerBreakdown(roundId);
+  const C = { paper:'#F6F2E7', paperAlt:'#EDE6D3', ink:'#22281F', inkSoft:'#5B6355', green:'#2E4A38', greenDark:'#1C2F22', gold:'#C0913D', rust:'#A5482C', white:'#FFFDF7', line:'#D3C7A6' };
+  const W = 720, padX = 36;
+  const scratch = document.createElement('canvas');
+  scratch.width = W; scratch.height = 3000;
+  const ctx = scratch.getContext('2d');
+  ctx.fillStyle = C.paper; ctx.fillRect(0,0,W,scratch.height);
+  let y = 0;
+  const headerH = 150;
+  ctx.fillStyle = C.green; ctx.fillRect(0,0,W,headerH);
+  ctx.fillStyle = C.gold; ctx.fillRect(0,headerH-5,W,5);
+  ctx.textAlign='center';
+  ctx.fillStyle = C.gold; ctx.font = '600 13px Georgia, serif';
+  ctx.fillText('THE BANDON CUP  ·  HOW THE POINT WAS WON', W/2, 34);
+  ctx.fillStyle = C.white; ctx.font = '700 30px Georgia, serif';
+  ctx.fillText(rc.course, W/2, 74);
+  ctx.font = '700 42px Georgia, serif'; ctx.fillStyle = C.gold;
+  ctx.fillText(`${b.teamA}  –  ${b.teamB}`, W/2, 122);
+  ctx.font = '12px -apple-system, sans-serif'; ctx.fillStyle = '#D9DFCE';
+  ctx.fillText('Team A          Team B', W/2, 140);
+  y = headerH + 26;
+  ctx.textAlign='left'; ctx.fillStyle = C.greenDark; ctx.font = '700 18px Georgia, serif';
+  ctx.fillText('HOLE-BY-HOLE', padX, y); y += 12;
+  ctx.strokeStyle = C.line; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(padX,y); ctx.lineTo(W-padX,y); ctx.stroke(); y += 22;
+  b.holesData.forEach(hd=>{
+    const rowH = 30;
+    const tagColor = hd.winner==='A' ? C.green : hd.winner==='B' ? C.rust : C.inkSoft;
+    if(hd.winner==='A' || hd.winner==='B'){ ctx.fillStyle = C.paperAlt; ctx.fillRect(padX-10, y-20, (W-padX*2)+20, rowH); }
+    ctx.textAlign='left'; ctx.font='700 13px -apple-system, sans-serif'; ctx.fillStyle = C.ink;
+    ctx.fillText(`H${hd.hole} (par ${hd.par})`, padX, y);
+    ctx.font='12.5px -apple-system, sans-serif'; ctx.fillStyle = C.green;
+    ctx.fillText(`A: ${hd.bestAId?getPlayer(hd.bestAId).name:'--'} ${hd.bestA===null?'':hd.bestA+'pt'}`, padX+110, y);
+    ctx.fillStyle = C.rust;
+    ctx.fillText(`B: ${hd.bestBId?getPlayer(hd.bestBId).name:'--'} ${hd.bestB===null?'':hd.bestB+'pt'}`, padX+340, y);
+    ctx.textAlign='right'; ctx.font='700 13px ui-monospace, monospace'; ctx.fillStyle = tagColor;
+    ctx.fillText(hd.winner==='A'?'A':hd.winner==='B'?'B':hd.winner==='T'?'TIE':'--', W-padX, y);
+    y += rowH;
+  });
+  y += 20;
+  ctx.textAlign='center'; ctx.font='italic 12px Georgia, serif'; ctx.fillStyle = C.inkSoft;
+  ctx.fillText('— The Bandon Cup app', W/2, y+8);
+  y += 40;
+  const finalH = Math.ceil(y);
+  const finalCanvas = document.createElement('canvas');
+  finalCanvas.width = W; finalCanvas.height = finalH;
+  const fctx = finalCanvas.getContext('2d');
+  fctx.drawImage(scratch, 0, 0, W, finalH, 0, 0, W, finalH);
+  return finalCanvas;
+}
+function buildMedalistBreakdownText(playerId){
+  const pl = getPlayer(playerId);
+  const b = computeMedalistBreakdown(playerId);
+  let lines = [];
+  lines.push(`${pl.name.toUpperCase()} -- MEDALIST BREAKDOWN`);
+  lines.push('');
+  lines.push(`TOTAL: ${b.total} pts (net Stableford)`);
+  lines.push('');
+  if(!b.rounds.length){
+    lines.push('No rounds played yet.');
+  } else {
+    b.rounds.forEach(r=> lines.push(`${r.course} (${r.date}) -- ${r.teeName} tees, CH ${r.ch}, gross ${r.gross} -- ${r.netPts} pts`));
+  }
+  lines.push('');
+  lines.push('-- sent from The Bandon Cup app');
+  return lines.join('\n');
+}
+function generateMedalistBreakdownCanvas(playerId){
+  const pl = getPlayer(playerId);
+  const b = computeMedalistBreakdown(playerId);
+  const C = { paper:'#F6F2E7', paperAlt:'#EDE6D3', ink:'#22281F', inkSoft:'#5B6355', green:'#2E4A38', greenDark:'#1C2F22', gold:'#C0913D', rust:'#A5482C', white:'#FFFDF7', line:'#D3C7A6' };
+  const W = 720, padX = 36;
+  const scratch = document.createElement('canvas');
+  scratch.width = W; scratch.height = 2000;
+  const ctx = scratch.getContext('2d');
+  ctx.fillStyle = C.paper; ctx.fillRect(0,0,W,scratch.height);
+  let y = 0;
+  const headerH = 150;
+  const teamColor = pl.team==='A' ? C.green : C.rust;
+  ctx.fillStyle = teamColor; ctx.fillRect(0,0,W,headerH);
+  ctx.fillStyle = C.gold; ctx.fillRect(0,headerH-5,W,5);
+  ctx.textAlign='center';
+  ctx.fillStyle = C.gold; ctx.font = '600 13px Georgia, serif';
+  ctx.fillText('THE BANDON CUP  ·  MEDALIST BREAKDOWN', W/2, 34);
+  ctx.fillStyle = C.white; ctx.font = '700 34px Georgia, serif';
+  ctx.fillText(pl.name, W/2, 76);
+  ctx.font = '700 44px Georgia, serif'; ctx.fillStyle = C.gold;
+  ctx.fillText(`${b.total} pts`, W/2, 126);
+  ctx.font = '12px -apple-system, sans-serif'; ctx.fillStyle = '#EFE9DC';
+  ctx.fillText('Cumulative net Stableford across championship rounds', W/2, 144);
+  y = headerH + 28;
+  ctx.textAlign='left'; ctx.fillStyle = C.greenDark; ctx.font = '700 18px Georgia, serif';
+  ctx.fillText('ROUND-BY-ROUND', padX, y); y += 12;
+  ctx.strokeStyle = C.line; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(padX,y); ctx.lineTo(W-padX,y); ctx.stroke(); y += 24;
+  if(!b.rounds.length){
+    ctx.textAlign='left'; ctx.fillStyle = C.inkSoft; ctx.font = '15px -apple-system, sans-serif';
+    ctx.fillText('No rounds played yet.', padX, y); y += 30;
+  }
+  b.rounds.forEach(r=>{
+    const rowH = 40;
+    ctx.textAlign='left'; ctx.font='700 15px Georgia, serif'; ctx.fillStyle = C.ink;
+    ctx.fillText(r.course, padX, y);
+    ctx.font='11.5px ui-monospace, monospace'; ctx.fillStyle = C.inkSoft;
+    ctx.fillText(`${r.teeName} tees · CH ${r.ch} · gross ${r.gross}`, padX, y+16);
+    ctx.textAlign='right'; ctx.font='700 20px Georgia, serif'; ctx.fillStyle = teamColor;
+    ctx.fillText(`${r.netPts} pts`, W-padX, y+6);
+    y += rowH;
+    ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(padX,y-14); ctx.lineTo(W-padX,y-14); ctx.stroke();
+  });
+  y += 16;
+  ctx.textAlign='center'; ctx.font='italic 12px Georgia, serif'; ctx.fillStyle = C.inkSoft;
+  ctx.fillText('— The Bandon Cup app', W/2, y+8);
+  y += 40;
+  const finalH = Math.ceil(y);
+  const finalCanvas = document.createElement('canvas');
+  finalCanvas.width = W; finalCanvas.height = finalH;
+  const fctx = finalCanvas.getContext('2d');
+  fctx.drawImage(scratch, 0, 0, W, finalH, 0, 0, W, finalH);
+  return finalCanvas;
+}
+
+function buildSummaryText(){
+  let lines = [];
+  lines.push('THE BANDON CUP -- UPDATE');
+  lines.push('');
+
+  // Cup score
+  let cupA=0, cupB=0;
+  const fullRounds = state.rounds.filter(r=>r.type==='full');
+  fullRounds.forEach(rc=>{
+    const res = computeFullRoundResult(rc.id);
+    const played = state.players.some(p=>getPlayerHoles(rc.id,p.id).some(g=>g!==null));
+    if(!played) return;
+    if(res.teamA>res.teamB) cupA+=1; else if(res.teamB>res.teamA) cupB+=1; else { cupA+=0.5; cupB+=0.5; }
+  });
+  lines.push(`CUP SCORE: Team A ${cupA} - Team B ${cupB}${cupA===cupB ? ' (tied)' : (cupA>cupB ? ' (Team A leads)' : ' (Team B leads)')}`);
+  lines.push('');
+
+  // Most recent round played: each player's score + their rank that round
+  const latest = findLatestPlayedRound();
+  if(latest){
+    lines.push(`LATEST ROUND -- ${latest.course.toUpperCase()} (${latest.date}):`);
+    if(latest.type==='full'){
+      const res = computeFullRoundResult(latest.id);
+      const list = state.players.map(p=>({p, r: res.perPlayer[p.id]})).filter(x=>x.r.played>0);
+      list.sort((a,b)=> b.r.netPtsTotal - a.r.netPtsTotal);
+      let rank=0, prevPts=null, shown=0;
+      list.forEach(x=>{
+        shown++;
+        if(x.r.netPtsTotal !== prevPts){ rank = shown; prevPts = x.r.netPtsTotal; }
+        lines.push(`${rank}. ${x.p.name} -- gross ${x.r.grossTotal}, net ${x.r.netPtsTotal} pts (${x.r.teeName} tees)`);
+      });
+      if(!list.length) lines.push('(no full scorecards submitted yet for this round)');
+    } else {
+      const ranking = shortRoundRanking(latest.id);
+      ranking.forEach(x=> lines.push(`${x.rank}. ${x.p.name} -- ${x.points} pts`));
+      if(!ranking.length) lines.push('(no scores submitted yet for this session)');
+    }
+    lines.push('');
+  }
+
+  // Medalist standings (cumulative net Stableford, full rounds)
+  const medal = state.players.map(pl=>{
+    let total=0, rp=0;
+    fullRounds.forEach(rc=>{ const res=computeFullRoundResult(rc.id); if(res.perPlayer[pl.id].played>0){ total+=res.perPlayer[pl.id].netPtsTotal; rp++; } });
+    return {pl,total,rp};
+  }).sort((a,b)=>b.total-a.total);
+  lines.push('MEDALIST STANDINGS (net Stableford, cumulative):');
+  medal.forEach((m,i)=>{ if(m.rp>0) lines.push(`${i+1}. ${m.pl.name} -- ${m.total} pts (${m.rp} rds)`); });
+  lines.push('');
+
+  // Championship skins pot (money game, full rounds only)
+  const moneyTotalsTxt = {}; state.players.forEach(p=>moneyTotalsTxt[p.id]=0);
+  let potGrandTotalTxt = 0;
+  fullRounds.forEach(rc=>{ const m=computeMoneySkinsResult(rc.id); potGrandTotalTxt+=m.potTotal; state.players.forEach(p=> moneyTotalsTxt[p.id]+=m.winnings[p.id]); });
+  const anyMoney = Object.values(moneyTotalsTxt).some(v=>v>0);
+  if(anyMoney){
+    lines.push(`SKINS POT -- CHAMPIONSHIP ROUNDS ($${potGrandTotalTxt.toFixed(2)} in play):`);
+    state.players.map(p=>({p,amt:moneyTotalsTxt[p.id]})).sort((a,b)=>b.amt-a.amt).forEach(x=> lines.push(`${x.p.name} -- $${x.amt.toFixed(2)}`));
+    lines.push('');
+  }
+
+  // Full skins standings, every player
+  const shortRounds = state.rounds.filter(r=>r.type==='short');
+  const skinsTotals={}; state.players.forEach(p=>skinsTotals[p.id]=0);
+  shortRounds.forEach(rc=>{ const res=computeShortRoundResult(rc.id); Object.keys(res.skinsCount).forEach(pid=>skinsTotals[pid]+=res.skinsCount[pid]); });
+  const anySkins = Object.values(skinsTotals).some(c=>c>0);
+  if(anySkins){
+    const skinsSorted = state.players.map(p=>({p,c:skinsTotals[p.id]})).sort((a,b)=>b.c-a.c);
+    lines.push('SKINS GAME -- POINTS:');
+    skinsSorted.forEach(x=> lines.push(`${x.p.name} -- ${x.c} pts`));
+    lines.push('');
+  }
+
+  lines.push('-- sent from The Bandon Cup app');
+  return lines.join('\n');
+}
+function generateRulesCanvas(){
+  const teamA = state.players.filter(p=>p.team==='A');
+  const teamB = state.players.filter(p=>p.team==='B');
+  const fullRounds = state.rounds.filter(r=>r.type==='full');
+  const shortRounds = state.rounds.filter(r=>r.type==='short');
+  const C = { paper:'#F6F2E7', paperAlt:'#EDE6D3', ink:'#22281F', inkSoft:'#5B6355', green:'#2E4A38', greenDark:'#1C2F22', gold:'#C0913D', rust:'#A5482C', white:'#FFFDF7', line:'#D3C7A6' };
+  const W = 720, padX = 36, innerW = W - padX*2;
+  const scratch = document.createElement('canvas');
+  scratch.width = W; scratch.height = 5200;
+  const ctx = scratch.getContext('2d');
+  ctx.fillStyle = C.paper; ctx.fillRect(0,0,W,scratch.height);
+
+  let y = 0;
+  const headerH = 130;
+  ctx.fillStyle = C.green; ctx.fillRect(0,0,W,headerH);
+  ctx.fillStyle = C.gold; ctx.fillRect(0,headerH-5,W,5);
+  ctx.textAlign='center';
+  ctx.fillStyle = C.gold; ctx.font = '600 13px Georgia, serif';
+  ctx.fillText('AUG 27–31, 2026  ·  BANDON DUNES', W/2, 32);
+  ctx.fillStyle = C.white; ctx.font = '700 28px Georgia, serif';
+  ctx.fillText('The Bandon Cup — Rules & Format', W/2, 68);
+  ctx.font = '12.5px -apple-system, sans-serif'; ctx.fillStyle = '#D9DFCE';
+  ctx.fillText(`8 players  ·  ${fullRounds.length} championship rounds  ·  ${shortRounds.length} short-course session${shortRounds.length===1?'':'s'}`, W/2, 96);
+  y = headerH + 26;
+
+  function sectionTitle(title){
+    ctx.textAlign='left'; ctx.fillStyle = C.greenDark; ctx.font = '700 18px Georgia, serif';
+    ctx.fillText(title, padX, y); y += 12;
+    ctx.strokeStyle = C.line; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(padX,y); ctx.lineTo(W-padX,y); ctx.stroke();
+    y += 20;
+  }
+  function paragraph(text, opts={}){
+    ctx.textAlign='left';
+    ctx.font = (opts.bold?'700 ':'') + (opts.size||13.5) + 'px -apple-system, sans-serif';
+    ctx.fillStyle = opts.color || C.ink;
+    const lines = wrapCanvasText(ctx, text, innerW);
+    lines.forEach(line=>{ ctx.fillText(line, padX, y); y += (opts.lineHeight||19); });
+    y += (opts.gap!==undefined ? opts.gap : 12);
+  }
+
+  sectionTitle('THE TEAMS');
+  paragraph('Team A: ' + teamA.map(p=>`${p.name} (${p.index})`).join(', '), {color:C.green, bold:true});
+  paragraph('Team B: ' + teamB.map(p=>`${p.name} (${p.index})`).join(', '), {color:C.rust, bold:true});
+  paragraph('Split by a snake draft off Handicap Index so both sides land close to even.', {size:12, color:C.inkSoft, gap:4});
+
+  sectionTitle('THE SCHEDULE');
+  state.rounds.forEach(rc=> paragraph(`${rc.date} — ${rc.course} (${rc.type==='full'?'full round':'short course'})`, {size:13, gap:3}));
+  y += 8;
+
+  sectionTitle('THE CUP (TEAM COMPETITION)');
+  paragraph(`On each of the ${fullRounds.length} full rounds, every player plays their own ball at their own Course Handicap. For each hole we take the best net Stableford score from each team's foursome (four-ball best-ball). Highest total wins 1 point for that round; ties split 0.5/0.5. Most points across all rounds wins the Cup.`);
+  paragraph('Net Stableford per hole: eagle+ = 4, birdie = 3, par = 2, bogey = 1, double bogey or worse = 0.', {size:12, color:C.inkSoft, gap:4});
+
+  sectionTitle('MEDALIST (INDIVIDUAL)');
+  paragraph(`Cumulative net Stableford points across all ${fullRounds.length} full rounds — highest total wins, independent of team result.`);
+
+  sectionTitle('SKINS POT (CHAMPIONSHIP ROUNDS — MONEY GAME)');
+  paragraph('Separate from the short-course points game below. Each player antes per round (default $10/player = $80 pot, editable). Every hole except par-3s is won by low NET score; par-3 holes are won by low GROSS score instead. Must be exactly ONE clear winner — ties mean nobody wins that hole, no carryover.');
+  paragraph('Payout: count how many holes end up with a clear winner (N) — the pot splits N ways. One winning hole all round = that player takes the whole pot. Five winning holes = pot splits 5 ways.', {size:12, color:C.inkSoft, gap:4});
+
+  sectionTitle('SKINS GAME (SHORT COURSES)');
+  const shortNames = shortRounds.map(r=>r.course).filter((v,i,a)=>a.indexOf(v)===i).join(' + ');
+  paragraph(`${shortNames} run as a Birdie/Par/Bogey points game, not gross skins — with 8 players, gross skins tie constantly and nothing gets won.`);
+  paragraph('Birdie = 3, Par = 1, Bogey or worse = 0. Only the best result on the hole scores; ties are broken by Closest to the Pin. No carryovers.', {size:12.5});
+  paragraph('Stakes escalate through the round:', {size:12.5, gap:4});
+  paragraph('13-hole (Preserve): holes 1–5 = 1×, 6–10 = 2×, 11–13 = 4×', {size:12, color:C.inkSoft, gap:3});
+  paragraph("19-hole (Shorty's): holes 1–7 = 1×, 8–14 = 2×, 15–19 = 4×", {size:12, color:C.inkSoft, gap:4});
+
+  // Bold callout box for the handicap allowance rule
+  const boxText = "If a double-digit handicapper's ball is up to one foot farther from the hole than a single-digit handicapper's ball, the group can still rule it the closer ball. This is a judgment call made by the players on the course, not something the app calculates.";
+  ctx.font = '700 12.5px -apple-system, sans-serif';
+  const wrapped = wrapCanvasText(ctx, boxText, innerW-24);
+  const boxH = 36 + wrapped.length*18;
+  ctx.fillStyle = '#FDEDE8';
+  roundRectPath(ctx, padX-4, y-4, innerW+8, boxH, 8); ctx.fill();
+  ctx.strokeStyle = C.rust; ctx.lineWidth = 1.5;
+  roundRectPath(ctx, padX-4, y-4, innerW+8, boxH, 8); ctx.stroke();
+  ctx.textAlign='left'; ctx.fillStyle = C.rust; ctx.font = '700 13px -apple-system, sans-serif';
+  ctx.fillText('RULE: 1-FOOT ALLOWANCE FOR DOUBLE-DIGIT HANDICAPS', padX+8, y+14);
+  y += 32;
+  ctx.font = '700 12.5px -apple-system, sans-serif'; ctx.fillStyle = '#7A2E1B';
+  wrapped.forEach(line=>{ ctx.fillText(line, padX+8, y); y += 18; });
+  y += 24;
+
+  sectionTitle('HANDICAPS & TEES');
+  paragraph("Each player picks a tee per round. Course Handicap comes from that tee's Rating/Slope vs. current Index. Update index after posting to GHIN — it applies to the next unfinalized round. Finalizing a round locks in the handicap used.");
+
+  ctx.textAlign='center'; ctx.font='italic 12px Georgia, serif'; ctx.fillStyle = C.inkSoft;
+  ctx.fillText('— The Bandon Cup app', W/2, y+8);
+  y += 40;
+
+  const finalH = Math.ceil(y);
+  const finalCanvas = document.createElement('canvas');
+  finalCanvas.width = W; finalCanvas.height = finalH;
+  const fctx = finalCanvas.getContext('2d');
+  fctx.drawImage(scratch, 0, 0, W, finalH, 0, 0, W, finalH);
+  return finalCanvas;
+}
+function buildRulesText(){
+  const teamA = state.players.filter(p=>p.team==='A');
+  const teamB = state.players.filter(p=>p.team==='B');
+  const fullRounds = state.rounds.filter(r=>r.type==='full');
+  const shortRounds = state.rounds.filter(r=>r.type==='short');
+  let lines = [];
+  lines.push('THE BANDON CUP -- FORMAT & RULES');
+  lines.push('');
+  lines.push('TEAM A: ' + teamA.map(p=>`${p.name} (${p.index})`).join(', '));
+  lines.push('TEAM B: ' + teamB.map(p=>`${p.name} (${p.index})`).join(', '));
+  lines.push('');
+  lines.push('SCHEDULE:');
+  state.rounds.forEach(rc=> lines.push(`${rc.date} -- ${rc.course} (${rc.type==='full'?'full round':'short course'})`));
+  lines.push('');
+  lines.push('THE CUP (TEAM COMPETITION):');
+  lines.push(`On each of the ${fullRounds.length} full rounds, every player plays their own ball at their own Course Handicap. For each hole we take the best net Stableford score on that hole from each team's foursome (four-ball best-ball). Highest total across 18 holes wins 1 point for that round; ties split 0.5/0.5. Most points across all rounds wins the Cup.`);
+  lines.push('Net Stableford per hole: eagle+ =4, birdie=3, par=2, bogey=1, double bogey or worse=0 (net double bogey capped).');
+  lines.push('');
+  lines.push('MEDALIST (INDIVIDUAL):');
+  lines.push(`Cumulative net Stableford points across all ${fullRounds.length} full rounds -- highest total wins, independent of team result.`);
+  lines.push('');
+  lines.push('SKINS POT (CHAMPIONSHIP ROUNDS -- MONEY GAME):');
+  lines.push('Separate from the short-course points game below. Each player antes per round (default $10/player = $80 pot per round, editable). Every hole except par-3s is won by low NET score (Course Handicap applied); par-3 holes are won by low GROSS score instead. Must be exactly ONE clear winner -- ties mean nobody wins that hole, no carryover.');
+  lines.push('Payout: count how many holes end up with a clear winner (N), and the pot splits N ways. One hole with a clear winner all round = that player takes the whole pot. Five holes with clear winners = pot splits 5 ways; someone who won 2 of those 5 takes 2/5 of the pot.');
+  lines.push('');
+  lines.push('SKINS GAME (SHORT COURSES):');
+  const shortNames = shortRounds.map(r=>r.course).filter((v,i,a)=>a.indexOf(v)===i).join(' + ');
+  lines.push(`${shortNames} run as a Birdie/Par/Bogey points game (not gross skins -- with 8 players, gross skins tie constantly and nothing gets won).`);
+  lines.push('Base points: Birdie = 3, Par = 1, Bogey or worse = 0.');
+  lines.push('Only the best result on the hole scores. One player with the best result wins the hole outright. If players tie for the best result, whoever is Closest to the Pin among them wins the points -- everyone else gets zero. All bogey+ = push, 0 points. NO CARRYOVERS -- every hole resolves the same day.');
+  lines.push('Stakes escalate through the round:');
+  lines.push('  13-hole course (Preserve): holes 1-5 = 1x, holes 6-10 = 2x, holes 11-13 = 4x');
+  lines.push('  19-hole course (Shorty\'s): holes 1-7 = 1x, holes 8-14 = 2x, holes 15-19 = 4x');
+  lines.push('(A birdie is worth 3 pts early, 6 pts in the middle stretch, 12 pts coming home.)');
+  lines.push('');
+  lines.push('*** RULE: DOUBLE-DIGIT-HANDICAP PLAYERS GET A 1-FOOT ALLOWANCE ON CLOSEST-TO-PIN CALLS. ***');
+  lines.push('If a double-digit handicapper\'s ball is up to one foot farther from the hole than a single-digit handicapper\'s ball, the group can still rule it the closer ball. This is a judgment call made by the players on the course.');
+  lines.push('');
+  lines.push('HANDICAPS & TEES:');
+  lines.push('Each player picks a tee per round. Course Handicap comes from that tee\'s Rating/Slope vs. current Index. Update index after posting to GHIN -- it applies to the next unfinalized round. Finalizing a round locks in the handicap used.');
+  lines.push('');
+  lines.push('-- sent from The Bandon Cup app');
+  return lines.join('\n');
+}
+/* ---------------- BULK IMPORT (paste scores transcribed from 18Birdies screenshots) ---------------- */
+function buildImportPromptText(rc){
+  const names = state.players.map(p=>p.name).join(', ');
+  const formatNote = `These are 18Birdies "Scores" tab screenshots — hole numbers, par, and handicap run across the top, then each player has a row of big numbers underneath (their gross strokes per hole), with a small "CH" number under their name (ignore that CH number, it's not needed). Birdies/eagles may be highlighted in colored circles — just read the plain number inside, ignore the color. Read straight down each player's row in hole order.`;
+  if(rc.type==='full'){
+    return `I'm sharing golf scorecard screenshots from the 18Birdies app for our round at ${rc.course} (${rc.holes} holes). ${formatNote} For each player pictured, read their GROSS score (total strokes) for every hole, in hole order 1 through ${rc.holes}. Reply with ONLY one line per player, no other commentary, in exactly this format:
+
+PlayerName: score1,score2,score3,...,score${rc.holes}
+
+Use first names only, matching exactly: ${names}. If a hole is unclear or unreadable in the screenshot, put a 0 for that hole instead of guessing — don't skip the player, just mark that one hole as 0.`;
+  }
+  return `I'm sharing golf scorecard screenshots from the 18Birdies app for our round at ${rc.course}, a ${rc.holes}-hole par-3 course. ${formatNote} For each player pictured, look at their score on every hole and classify it relative to that hole's par as Birdie, Par, or Bogey-or-worse. Reply with ONLY one line per player, no other commentary, in exactly this format:
+
+PlayerName: code1,code2,...,code${rc.holes}
+
+where each code is B for birdie, P for par, or X for bogey or worse. Use first names only, matching exactly: ${names}. If a hole is unclear or unreadable, use ? for that hole instead of guessing — don't skip the player, just mark that one hole as ?.`;
+}
+function parseBulkImport(text, rc){
+  const lines = text.split('\n').map(l=>l.trim()).filter(Boolean);
+  const results = [];
+  const catMap = { b:'birdie', birdie:'birdie', p:'par', par:'par', x:'bogey', bogey:'bogey', bg:'bogey' };
+  lines.forEach(line=>{
+    const colonIdx = line.indexOf(':');
+    if(colonIdx===-1){ results.push({ raw:line, ok:false, error:'No colon found — expected "Name: values"' }); return; }
+    const namePart = line.slice(0,colonIdx).trim();
+    const dataPart = line.slice(colonIdx+1).trim();
+    const player = state.players.find(p=> p.name.toLowerCase()===namePart.toLowerCase());
+    if(!player){ results.push({ raw:line, ok:false, error:`No player named "${namePart}"` }); return; }
+    const tokens = dataPart.split(',').map(t=>t.trim()).filter(t=>t!=='');
+    if(tokens.length !== rc.holes){ results.push({ raw:line, ok:false, error:`Expected ${rc.holes} values, found ${tokens.length}` }); return; }
+    let values = [], skipped = 0, bad = false;
+    if(rc.type==='full'){
+      values = tokens.map(t=>{
+        if(t==='0' || t==='?'){ skipped++; return null; }
+        const n = parseInt(t,10);
+        if(isNaN(n) || n<1 || n>15){ bad = true; return null; }
+        return n;
+      });
+    } else {
+      values = tokens.map(t=>{
+        if(t==='?'){ skipped++; return null; }
+        const c = catMap[t.toLowerCase()];
+        if(!c){ bad = true; return null; }
+        return c;
+      });
+    }
+    if(bad){ results.push({ raw:line, ok:false, error: rc.type==='full' ? 'Values must be numbers 1-15 (or 0 for unclear)' : 'Values must be B, P, or X (or ? for unclear)' }); return; }
+    results.push({ raw:line, ok:true, player, values, skipped });
+  });
+  return results;
+}
+function applyBulkImportFromText(roundId, text){
+  const rc = getRound(roundId);
+  if(!text || !text.trim()){ showToast("Nothing to import — paste Claude's reply first"); return; }
+  const results = parseBulkImport(text, rc);
+  const s = ensureRoundScoreObj(roundId);
+  let successCt = 0, skipTotal = 0;
+  results.forEach(r=>{
+    if(!r.ok) return;
+    const before = s.holes[r.player.id] ? s.holes[r.player.id].slice() : null;
+    s.holes[r.player.id] = r.values;
+    successCt++; skipTotal += r.skipped;
+    logEvent('import', `Bulk import — ${r.player.name} — ${rc.course}: [${before?before.map(v=>v===null?'—':v).join(',') : 'empty'}] → [${r.values.map(v=>v===null?'—':v).join(',')}]`, {playerId:r.player.id, roundId:roundId});
+  });
+  if(rc.type==='short') s.ctpWinners = {}; // fresh data — re-check any ties
+  saveScores();
+  state.importModal.results = results;
+  state.importModal.summary = `Imported ${successCt} of ${state.players.length} players${skipTotal? ` — ${skipTotal} hole(s) marked unclear, fill those in manually`:''}.`;
+  renderImportModal();
+  if(successCt>0){ render(); showToast(`Imported ${successCt} player${successCt===1?'':'s'}`); }
+}
+function openImportModal(roundId){ state.importModal = { roundId, results:null, summary:null, pastedText:'' }; renderImportModal(); }
+function closeImportModal(){ state.importModal = null; renderImportModal(); }
+function renderImportModal(){
+  const el = document.getElementById('importModalOverlay');
+  if(!state.importModal){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='flex';
+  const rc = getRound(state.importModal.roundId);
+  const promptText = buildImportPromptText(rc);
+  const resultsHtml = state.importModal.results ? `
+    <div class="hole-result-banner ${state.importModal.results.every(r=>r.ok)?'win':'wait'}" style="margin-top:12px;">${state.importModal.summary}</div>
+    ${state.importModal.results.filter(r=>!r.ok).map(r=>`<div class="skins-hole"><span>&#10060; ${r.raw.slice(0,30)}</span><span>${r.error}</span></div>`).join('')}
+    ${state.importModal.results.filter(r=>r.ok).map(r=>`<div class="skins-hole"><span>&#9989; ${r.player.name}</span><span>${r.skipped? r.skipped+' hole(s) need a manual look':'all set'}</span></div>`).join('')}
+  ` : '';
+  el.innerHTML = `<div class="modal-card">
+    <div class="flex between" style="margin-bottom:6px;"><strong style="font-family:var(--font-display); font-size:17px;">Bulk Import Scores</strong><button class="btn secondary small" id="importModalClose" type="button">&times;</button></div>
+    <div class="card" style="margin-bottom:10px;">
+      <div class="muted" style="text-transform:uppercase; font-size:11px; letter-spacing:.04em; margin-bottom:6px;">Step 1</div>
+      <p style="font-size:13.5px; margin:0 0 8px;">Tap the box to select the prompt, then Copy. Then tap Open Claude, paste the prompt there, attach the screenshots, and send.</p>
+      <textarea id="importPromptText" readonly style="min-height:110px; font-size:11.5px;">${promptText}</textarea>
+      <div class="flex gap8" style="margin-top:8px;">
+        <button class="btn secondary" id="copyPromptBtn" style="flex:1;">&#128203; Copy</button>
+        <button class="btn gold" id="openClaudeBtn" style="flex:1;">Open Claude &#8599;</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="muted" style="text-transform:uppercase; font-size:11px; letter-spacing:.04em; margin-bottom:6px;">Step 2</div>
+      <p style="font-size:13.5px; margin:0 0 8px;">Once Claude replies, copy its reply. The box below is already focused — press and hold inside it and choose <strong>Paste</strong> (or tap your keyboard's Paste suggestion), then tap Import.</p>
+      <textarea id="importText" placeholder="Chet: 4,3,5,4,4,3,4,5,4,4,3,5,4,3,4,4,3,5">${state.importModal.pastedText||''}</textarea>
+      <button class="btn gold" id="applyImportBtn" style="width:100%; margin-top:8px;">Import</button>
+    </div>
+    ${resultsHtml}
+  </div>`;
+  document.getElementById('importModalClose').onclick = closeImportModal;
+
+  function selectPromptText(){
+    const ta = document.getElementById('importPromptText');
+    ta.focus();
+    ta.select();
+    try{ ta.setSelectionRange(0, 999999); }catch(e){}
+    return ta;
+  }
+  document.getElementById('importPromptText').addEventListener('click', selectPromptText);
+  document.getElementById('copyPromptBtn').onclick = ()=>{
+    selectPromptText();
+    let execOk = false;
+    try{ execOk = document.execCommand('copy'); }catch(e){ execOk = false; }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(promptText).then(()=>{
+        showToast('Prompt copied');
+      }).catch(()=>{
+        showToast(execOk ? 'Prompt copied' : "Auto-copy failed — text is selected, use your keyboard's Copy");
+      });
+    } else {
+      showToast(execOk ? 'Prompt copied' : "Auto-copy failed — text is selected, use your keyboard's Copy");
+    }
+  };
+  document.getElementById('openClaudeBtn').onclick = ()=>{ window.open('https://claude.ai/new', '_blank'); };
+
+  const importTextEl = document.getElementById('importText');
+  importTextEl.addEventListener('input', ()=>{ state.importModal.pastedText = importTextEl.value; });
+  if(!state.importModal.pastedText){
+    setTimeout(()=>{ try{ importTextEl.focus(); }catch(e){} }, 150);
+  }
+  document.getElementById('applyImportBtn').onclick = ()=>{
+    if(state.locked){ showToast('Unlock editing first'); return; }
+    const ta = document.getElementById('importText');
+    applyBulkImportFromText(state.importModal.roundId, ta ? ta.value : '');
+  };
+}
+
+/* ---------------- ACTIVITY LOG: totals + modal ---------------- */
+function computeCurrentTotals(){
+  const fullRounds = state.rounds.filter(r=>r.type==='full');
+  const shortRounds = state.rounds.filter(r=>r.type==='short');
+  let cupA=0, cupB=0;
+  fullRounds.forEach(rc=>{
+    const played = state.players.some(p=>getPlayerHoles(rc.id,p.id).some(g=>g!==null));
+    if(!played) return;
+    const res = computeFullRoundResult(rc.id);
+    if(res.teamA>res.teamB) cupA+=1; else if(res.teamB>res.teamA) cupB+=1; else { cupA+=0.5; cupB+=0.5; }
+  });
+  const moneyTotals={}; state.players.forEach(p=>moneyTotals[p.id]=0);
+  fullRounds.forEach(rc=>{ const m=computeMoneySkinsResult(rc.id); state.players.forEach(p=> moneyTotals[p.id]+=m.winnings[p.id]); });
+  const skinsTotals={}; state.players.forEach(p=>skinsTotals[p.id]=0);
+  shortRounds.forEach(rc=>{ const res=computeShortRoundResult(rc.id); Object.keys(res.skinsCount).forEach(pid=> skinsTotals[pid]+=res.skinsCount[pid]); });
+  const rows = state.players.map(p=>{
+    let medalPts=0, roundsPlayed=0;
+    fullRounds.forEach(rc=>{ const res=computeFullRoundResult(rc.id); if(res.perPlayer[p.id].played>0){ medalPts+=res.perPlayer[p.id].netPtsTotal; roundsPlayed++; } });
+    return { id:p.id, name:p.name, team:p.team, medalPts, roundsPlayed, winnings: moneyTotals[p.id], shortPts: skinsTotals[p.id] };
+  });
+  return { cupA, cupB, rows, fullRoundsCt: fullRounds.length };
+}
+const LOG_TYPE_LABELS = { score:'Score', ctp:'CTP', handicap:'Handicap', tee:'Tee Pref', roundtee:'Round Tee', buyin:'Buy-in', finalize:'Finalize', import:'Import', reset:'Reset', teams:'Teams', other:'Setting' };
+function buildLogText(entries){
+  const t = computeCurrentTotals();
+  let out = `BANDON CUP — ACTIVITY LOG\nGenerated ${fmtLogTs(new Date().toISOString())}\n\nCUP: Team A ${t.cupA} — Team B ${t.cupB}\n\nCURRENT TOTALS\n`;
+  t.rows.forEach(r=> out += `${r.name} (${r.team}): Medalist ${r.medalPts} pts (${r.roundsPlayed}/${t.fullRoundsCt} rds) · Skins $${r.winnings.toFixed(2)} · Short-game ${r.shortPts} pts\n`);
+  out += `\nENTRIES — newest first (${entries.length} shown)\n`;
+  entries.slice().reverse().forEach(e=> out += `[${fmtLogTs(e.ts)}] ${LOG_TYPE_LABELS[e.type]||e.type}: ${e.summary}\n`);
+  return out;
+}
+function filteredLogEntries(){
+  const all = state.auditLog || [];
+  if(!state.logModal) return all;
+  let list = all;
+  if(state.logModal.typeFilter && state.logModal.typeFilter!=='all') list = list.filter(e=>e.type===state.logModal.typeFilter);
+  if(state.logModal.playerFilter && state.logModal.playerFilter!=='all') list = list.filter(e=>e.playerId===state.logModal.playerFilter);
+  return list;
+}
+function openLogModal(){ state.logModal = state.logModal || { typeFilter:'all', playerFilter:'all' }; renderLogModal(); }
+function closeLogModal(){ state.logModal = null; renderLogModal(); }
+function renderLogModal(){
+  const el = document.getElementById('logModalOverlay');
+  if(!state.logModal){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='flex';
+  const entries = filteredLogEntries();
+  const totals = computeCurrentTotals();
+  const totalsHtml = totals.rows.map(r=>`<tr><td class="name">${r.name} <span class="badge ${r.team}">${r.team}</span></td><td>${r.medalPts}</td><td>$${r.winnings.toFixed(2)}</td><td>${r.shortPts}</td></tr>`).join('');
+  const usedTypes = Array.from(new Set((state.auditLog||[]).map(e=>e.type)));
+  const typeOptionsHtml = `<option value="all">All types</option>` + usedTypes.map(t=>`<option value="${t}" ${state.logModal.typeFilter===t?'selected':''}>${LOG_TYPE_LABELS[t]||t}</option>`).join('');
+  const playerOptionsHtml = `<option value="all">All players</option>` + state.players.map(p=>`<option value="${p.id}" ${state.logModal.playerFilter===p.id?'selected':''}>${p.name}</option>`).join('');
+  let lastDate = null;
+  const rows = [];
+  entries.slice().reverse().forEach(e=>{
+    const d = new Date(e.ts);
+    const dateStr = d.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});
+    if(dateStr!==lastDate){ rows.push(`<div class="log-date-heading">${dateStr}</div>`); lastDate=dateStr; }
+    const timeStr = d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+    rows.push(`<div class="log-entry"><div class="log-ts">${timeStr} &nbsp; <span class="log-tag">${LOG_TYPE_LABELS[e.type]||e.type}</span></div>${e.summary}</div>`);
+  });
+  const entriesHtml = rows.length ? rows.join('') : '<p class="muted">No entries yet &mdash; once scores start getting entered, every change will show up here.</p>';
+  el.innerHTML = `<div class="modal-card">
+    <div class="flex between" style="margin-bottom:6px;"><strong style="font-family:var(--font-display); font-size:17px;">Activity Log</strong><button class="btn secondary small" id="logModalClose" type="button">&times;</button></div>
+    <p class="muted" style="margin:0 0 10px;">Every score, handicap, tee, and buy-in change entered on this device, timestamped &mdash; use this to settle any "that's not what I entered" disputes.</p>
+    <h2 class="section-title" style="margin-top:0;">Current totals</h2>
+    <div class="card" style="margin-bottom:12px;">
+      <table><thead><tr><th style="text-align:left;">Player</th><th>Medalist</th><th>Skins $</th><th>Short pts</th></tr></thead><tbody>${totalsHtml}</tbody></table>
+      <p class="muted" style="margin-top:8px;">Cup: Team A ${totals.cupA} &ndash; Team B ${totals.cupB}</p>
+    </div>
+    <div class="flex gap8" style="margin-bottom:10px;">
+      <select id="logTypeFilter" style="flex:1;">${typeOptionsHtml}</select>
+      <select id="logPlayerFilter" style="flex:1;">${playerOptionsHtml}</select>
+    </div>
+    <div class="card" style="max-height:280px; overflow-y:auto;">${entriesHtml}</div>
+    <div class="flex gap8" style="margin-top:10px;">
+      <button class="btn secondary" id="copyLogBtn" style="flex:1;">&#128203; Copy</button>
+      <button class="btn" id="emailLogBtn" style="flex:1;">Email</button>
+      <button class="btn" id="textLogBtn" style="flex:1;">Text</button>
+    </div>
+    <button class="btn rust" id="clearLogBtn" style="width:100%; margin-top:8px;" ${state.locked?'disabled':''}>Clear Log</button>
+  </div>`;
+  document.getElementById('logModalClose').onclick = closeLogModal;
+  document.getElementById('logTypeFilter').onchange = (e)=>{ state.logModal.typeFilter = e.target.value; renderLogModal(); };
+  document.getElementById('logPlayerFilter').onchange = (e)=>{ state.logModal.playerFilter = e.target.value; renderLogModal(); };
+  document.getElementById('copyLogBtn').onclick = ()=>{
+    const text = buildLogText(entries);
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(()=>showToast('Log copied')).catch(()=>showToast('Copy failed — try again'));
+    } else showToast("Clipboard not available on this browser");
+  };
+  document.getElementById('emailLogBtn').onclick = ()=>{
+    const text = buildLogText(entries);
+    const emails = state.players.map(p=>p.email).filter(Boolean);
+    window.location.href = `mailto:${emails.join(',')}?subject=${encodeURIComponent('Bandon Cup — Activity Log')}&body=${encodeURIComponent(text)}`;
+  };
+  document.getElementById('textLogBtn').onclick = ()=>{
+    const text = buildLogText(entries);
+    const phones = state.players.map(p=>p.phone).filter(Boolean);
+    window.location.href = `sms:${phones.join(',')}?body=${encodeURIComponent(text)}`;
+  };
+  document.getElementById('clearLogBtn').onclick = ()=>{
+    if(state.locked) return;
+    if(!confirm('Clear the entire activity log? This cannot be undone and removes the audit trail.')) return;
+    state.auditLog = []; saveAuditLog(); renderLogModal(); showToast('Log cleared');
+  };
+}
+
+function buildTeamRevealText(){
+  const teamA = reorderByTeamChetFirst(state.players.filter(p=>p.team==='A'), p=>p.team, p=>p.id);
+  const teamB = state.players.filter(p=>p.team==='B');
+  const avgA = (teamA.reduce((s,p)=>s+p.index,0)/(teamA.length||1)).toFixed(1);
+  const avgB = (teamB.reduce((s,p)=>s+p.index,0)/(teamB.length||1)).toFixed(1);
+  let out = 'THE BANDON CUP -- THE TEAMS ARE SET\n\n';
+  out += `TEAM A (avg index ${avgA}):\n`;
+  teamA.forEach(p=> out += `  ${p.name} -- ${p.index}\n`);
+  out += `\nTEAM B (avg index ${avgB}):\n`;
+  teamB.forEach(p=> out += `  ${p.name} -- ${p.index}\n`);
+  out += '\nTeams locked in -- no changes from here on out. May the best team win!\n-- sent from The Bandon Cup app';
+  return out;
+}
+function buildTiebreakerText(){
+  const r = computeTiebreakerResult();
+  const lines = [];
+  lines.push('BANDON CUP — TIE-BREAKER RESULT');
+  lines.push('');
+  lines.push(`The 6 championship rounds finished the Cup tied at ${r.cup.cupA}\u2013${r.cup.cupB}, so the two short-course skins sessions decide it.`);
+  lines.push('');
+  r.perCourse.forEach(c=> lines.push(`${c.course}: Team A ${c.teamAPts} pts — Team B ${c.teamBPts} pts`));
+  lines.push('');
+  lines.push(`COMBINED SHORT-COURSE POINTS: Team A ${r.teamAPts} — Team B ${r.teamBPts}`);
+  lines.push('');
+  lines.push(r.winner==='T' ? 'Still dead even — for the ages.' : `TEAM ${r.winner} WINS THE BANDON CUP ON THE TIE-BREAKER!`);
+  return lines.join('\n');
+}
+function generateTiebreakerCanvas(){
+  const r = computeTiebreakerResult();
+  const C = { paper:'#F6F2E7', paperAlt:'#EDE6D3', ink:'#22281F', inkSoft:'#5B6355', green:'#2E4A38', greenDark:'#1C2F22', gold:'#C0913D', rust:'#A5482C', white:'#FFFDF7', line:'#D3C7A6' };
+  const W = 720, padX = 36, innerW = W - padX*2;
+  const scratch = document.createElement('canvas');
+  scratch.width = W; scratch.height = 900;
+  const ctx = scratch.getContext('2d');
+  ctx.fillStyle = C.paper; ctx.fillRect(0,0,W,scratch.height);
+
+  const headerH = 190;
+  ctx.fillStyle = C.greenDark; ctx.fillRect(0,0,W,headerH);
+  ctx.fillStyle = C.green; ctx.fillRect(0,0,W,headerH-10);
+  ctx.fillStyle = C.gold; ctx.fillRect(0,headerH-6,W,6);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = C.gold; ctx.font = '600 13px Georgia, serif';
+  ctx.fillText('THE BANDON CUP', W/2, 36);
+  ctx.fillStyle = C.white; ctx.font = '700 38px Georgia, serif';
+  ctx.fillText('Tie-Breaker!', W/2, 86);
+  ctx.font = 'italic 14px Georgia, serif'; ctx.fillStyle = '#D9DFCE';
+  ctx.fillText(`6 championship rounds finished tied ${r.cup.cupA}\u2013${r.cup.cupB}`, W/2, 112);
+  ctx.strokeStyle = C.gold; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(W/2-110,136); ctx.lineTo(W/2+110,136); ctx.stroke();
+  ctx.font = '700 12.5px -apple-system, sans-serif'; ctx.fillStyle = C.gold;
+  ctx.fillText('DECIDED BY THE SHORT-COURSE SKINS GAMES', W/2, 160);
+
+  let y = headerH + 44;
+  ctx.textAlign='left';
+  ctx.fillStyle = C.ink; ctx.font = '700 15px Georgia, serif';
+  ctx.fillText('COURSE-BY-COURSE POINTS', padX, y);
+  y += 14;
+  ctx.strokeStyle = C.line; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(padX,y); ctx.lineTo(W-padX,y); ctx.stroke();
+  y += 30;
+  r.perCourse.forEach(c=>{
+    ctx.textAlign='left'; ctx.fillStyle = C.ink; ctx.font = '600 16px Georgia, serif';
+    ctx.fillText(c.course, padX, y);
+    ctx.textAlign='right';
+    ctx.fillStyle = C.green; ctx.font = '700 16px ui-monospace, monospace';
+    ctx.fillText(`A ${c.teamAPts}`, padX + innerW*0.72, y);
+    ctx.fillStyle = C.rust;
+    ctx.fillText(`B ${c.teamBPts}`, padX + innerW, y);
+    y += 34;
+  });
+  y += 10;
+  ctx.strokeStyle = C.line; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(padX,y); ctx.lineTo(W-padX,y); ctx.stroke();
+  y += 40;
+
+  // combined totals banner
+  const bannerH = 74;
+  roundRectPath(ctx, padX, y, innerW, bannerH, 12); ctx.fillStyle = C.paperAlt; ctx.fill();
+  ctx.strokeStyle = C.gold; ctx.lineWidth = 1.5; roundRectPath(ctx, padX, y, innerW, bannerH, 12); ctx.stroke();
+  ctx.textAlign='center'; ctx.fillStyle = C.inkSoft; ctx.font = '700 11.5px -apple-system, sans-serif';
+  ctx.fillText('COMBINED TIE-BREAKER POINTS', W/2, y+22);
+  ctx.font = '700 30px Georgia, serif';
+  ctx.fillStyle = C.green; ctx.textAlign='right'; ctx.fillText(`${r.teamAPts}`, W/2-16, y+58);
+  ctx.fillStyle = C.inkSoft; ctx.textAlign='center'; ctx.font='700 16px Georgia, serif'; ctx.fillText('–', W/2, y+56);
+  ctx.fillStyle = C.rust; ctx.textAlign='left'; ctx.font = '700 30px Georgia, serif'; ctx.fillText(`${r.teamBPts}`, W/2+16, y+58);
+  y += bannerH + 34;
+
+  // winner banner
+  const winColor = r.winner==='A' ? C.green : (r.winner==='B' ? C.rust : C.inkSoft);
+  const winText = r.winner==='T' ? 'STILL TIED — FOR THE AGES' : `TEAM ${r.winner} WINS THE BANDON CUP!`;
+  const winH = 64;
+  roundRectPath(ctx, padX, y, innerW, winH, 12); ctx.fillStyle = winColor; ctx.fill();
+  ctx.fillStyle = C.white; ctx.font = '700 22px Georgia, serif'; ctx.textAlign='center';
+  ctx.fillText(winText, W/2, y+40);
+  y += winH + 30;
+
+  ctx.fillStyle = C.inkSoft; ctx.font = 'italic 12px Georgia, serif'; ctx.textAlign='center';
+  ctx.fillText('Bandon Preserve + Shorty\u2019s — combined, as the rules specify.', W/2, y);
+  y += 22;
+  ctx.font = 'italic 11px Georgia, serif';
+  ctx.fillText('— The Bandon Cup app', W/2, y);
+  y += 30;
+
+  const finalH = Math.ceil(y);
+  const finalCanvas = document.createElement('canvas');
+  finalCanvas.width = W; finalCanvas.height = finalH;
+  const fctx = finalCanvas.getContext('2d');
+  fctx.drawImage(scratch, 0, 0, W, finalH, 0, 0, W, finalH);
+  return finalCanvas;
+}
+function generateTeamRevealCanvas(){
+  const teamA = reorderByTeamChetFirst(state.players.filter(p=>p.team==='A'), p=>p.team, p=>p.id);
+  const teamB = state.players.filter(p=>p.team==='B');
+  const C = { paper:'#F6F2E7', paperAlt:'#EDE6D3', ink:'#22281F', inkSoft:'#5B6355', green:'#2E4A38', greenDark:'#1C2F22', gold:'#C0913D', rust:'#A5482C', white:'#FFFDF7', line:'#D3C7A6' };
+  const W = 720, padX = 36, innerW = W - padX*2;
+  const scratch = document.createElement('canvas');
+  scratch.width = W; scratch.height = 900;
+  const ctx = scratch.getContext('2d');
+  ctx.fillStyle = C.paper; ctx.fillRect(0,0,W,scratch.height);
+
+  // header
+  const headerH = 188;
+  ctx.fillStyle = C.greenDark; ctx.fillRect(0,0,W,headerH);
+  ctx.fillStyle = C.green; ctx.fillRect(0,0,W,headerH-10);
+  ctx.fillStyle = C.gold; ctx.fillRect(0,headerH-6,W,6);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = C.gold; ctx.font = '600 13px Georgia, serif';
+  ctx.fillText('AUG 27–31, 2026  ·  BANDON DUNES', W/2, 36);
+  ctx.fillStyle = C.white; ctx.font = '700 40px Georgia, serif';
+  ctx.fillText('The Teams Are Set', W/2, 88);
+  ctx.font = 'italic 14px Georgia, serif'; ctx.fillStyle = '#D9DFCE';
+  ctx.fillText('The Bandon Cup  ·  8 players, 4-a-side', W/2, 114);
+  ctx.strokeStyle = C.gold; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(W/2-90,138); ctx.lineTo(W/2+90,138); ctx.stroke();
+  ctx.font = '700 13px -apple-system, sans-serif'; ctx.fillStyle = C.gold;
+  ctx.fillText('MAY THE BEST TEAM WIN', W/2, 162);
+
+  const colGap = 64;
+  const colW = (innerW - colGap)/2;
+  const leftX = padX, rightX = padX + colW + colGap;
+  const colTop = headerH + 40;
+  const bannerH = 46;
+
+  function teamBanner(x, label, color){
+    roundRectPath(ctx, x, colTop, colW, bannerH, 10); ctx.fillStyle = color; ctx.fill();
+    ctx.fillStyle = C.white; ctx.font = '700 20px Georgia, serif'; ctx.textAlign='center';
+    ctx.fillText(label, x+colW/2, colTop+30);
+  }
+  teamBanner(leftX, 'TEAM A', C.green);
+  teamBanner(rightX, 'TEAM B', C.rust);
+
+  const rowH = 78;
+  const listTop = colTop + bannerH + 22;
+  function playerRow(x, p, color, idx){
+    const ry = listTop + idx*rowH;
+    ctx.textAlign='center';
+    ctx.fillStyle = color; ctx.font = '700 23px Georgia, serif';
+    ctx.fillText(p.name, x+colW/2, ry+22);
+    ctx.fillStyle = C.inkSoft; ctx.font = '600 12.5px -apple-system, sans-serif';
+    ctx.fillText(`Handicap Index ${p.index}`, x+colW/2, ry+42);
+    if(idx<3){
+      ctx.strokeStyle = C.line; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x+18, ry+58); ctx.lineTo(x+colW-18, ry+58); ctx.stroke();
+    }
+  }
+  teamA.forEach((p,i)=> playerRow(leftX, p, C.green, i));
+  teamB.forEach((p,i)=> playerRow(rightX, p, C.rust, i));
+
+  const avgY = listTop + 4*rowH + 4;
+  const avgA = teamA.length ? (teamA.reduce((s,p)=>s+p.index,0)/teamA.length) : 0;
+  const avgB = teamB.length ? (teamB.reduce((s,p)=>s+p.index,0)/teamB.length) : 0;
+  ctx.textAlign='center';
+  ctx.fillStyle = C.green; ctx.font='700 13px ui-monospace, monospace';
+  ctx.fillText(`TEAM AVG INDEX  ${avgA.toFixed(1)}`, leftX+colW/2, avgY);
+  ctx.fillStyle = C.rust;
+  ctx.fillText(`TEAM AVG INDEX  ${avgB.toFixed(1)}`, rightX+colW/2, avgY);
+
+  // VS badge, drawn last so it sits cleanly over the column midline
+  const vsCy = (colTop + avgY) / 2;
+  const vsR = 34;
+  ctx.beginPath(); ctx.arc(W/2, vsCy, vsR, 0, Math.PI*2); ctx.fillStyle = C.gold; ctx.fill();
+  ctx.lineWidth = 3; ctx.strokeStyle = C.greenDark; ctx.stroke();
+  ctx.fillStyle = C.greenDark; ctx.font = '700 21px Georgia, serif'; ctx.textAlign='center';
+  ctx.fillText('VS', W/2, vsCy+7);
+
+  let y = avgY + 46;
+  ctx.strokeStyle = C.line; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(W/2-110,y); ctx.lineTo(W/2+110,y); ctx.stroke();
+  y += 26;
+  ctx.fillStyle = C.inkSoft; ctx.font = 'italic 13px Georgia, serif'; ctx.textAlign='center';
+  ctx.fillText('Teams locked in — no changes from here on out.', W/2, y);
+  y += 24;
+  ctx.font = 'italic 11.5px Georgia, serif';
+  ctx.fillText('— The Bandon Cup app', W/2, y);
+  y += 34;
+
+  const finalH = Math.ceil(y);
+  const finalCanvas = document.createElement('canvas');
+  finalCanvas.width = W; finalCanvas.height = finalH;
+  const fctx = finalCanvas.getContext('2d');
+  fctx.drawImage(scratch, 0, 0, W, finalH, 0, 0, W, finalH);
+  return finalCanvas;
+}
+
+function openShareModal(kind, id){
+  kind = kind || 'update';
+  if(kind==='update'){
+    let imageDataUrl = null, canvas = null;
+    try{ canvas = generateSummaryCanvas(); imageDataUrl = canvas.toDataURL('image/png'); }
+    catch(e){ console.error('Image generation failed', e); }
+    state.shareModal = { kind, text: buildSummaryText(), imageDataUrl, canvas };
+  } else if(kind==='playerSkins'){
+    let imageDataUrl = null, canvas = null;
+    try{ canvas = generatePlayerSkinsCanvas(id); imageDataUrl = canvas.toDataURL('image/png'); }
+    catch(e){ console.error('Image generation failed', e); }
+    state.shareModal = { kind, playerId:id, text: buildPlayerSkinsText(id), imageDataUrl, canvas };
+  } else if(kind==='roundBreakdown'){
+    let imageDataUrl = null, canvas = null;
+    try{ canvas = generateRoundBreakdownCanvas(id); imageDataUrl = canvas.toDataURL('image/png'); }
+    catch(e){ console.error('Image generation failed', e); }
+    state.shareModal = { kind, roundId:id, text: buildRoundBreakdownText(id), imageDataUrl, canvas };
+  } else if(kind==='medalistBreakdown'){
+    let imageDataUrl = null, canvas = null;
+    try{ canvas = generateMedalistBreakdownCanvas(id); imageDataUrl = canvas.toDataURL('image/png'); }
+    catch(e){ console.error('Image generation failed', e); }
+    state.shareModal = { kind, playerId:id, text: buildMedalistBreakdownText(id), imageDataUrl, canvas };
+  } else if(kind==='teamReveal'){
+    let imageDataUrl = null, canvas = null;
+    try{ canvas = generateTeamRevealCanvas(); imageDataUrl = canvas.toDataURL('image/png'); }
+    catch(e){ console.error('Image generation failed', e); }
+    state.shareModal = { kind, text: buildTeamRevealText(), imageDataUrl, canvas };
+  } else if(kind==='tiebreaker'){
+    let imageDataUrl = null, canvas = null;
+    try{ canvas = generateTiebreakerCanvas(); imageDataUrl = canvas.toDataURL('image/png'); }
+    catch(e){ console.error('Image generation failed', e); }
+    state.shareModal = { kind, text: buildTiebreakerText(), imageDataUrl, canvas };
+  } else {
+    let imageDataUrl = null, canvas = null;
+    try{ canvas = generateRulesCanvas(); imageDataUrl = canvas.toDataURL('image/png'); }
+    catch(e){ console.error('Image generation failed', e); }
+    state.shareModal = { kind, text: buildRulesText(), imageDataUrl, canvas };
+  }
+  renderShareModal();
+}
+function closeShareModal(){ state.shareModal = null; renderShareModal(); }
+function renderShareModal(){
+  const el = document.getElementById('shareModalOverlay');
+  if(!state.shareModal){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='flex';
+  const kind = state.shareModal.kind;
+  const isRules = kind==='rules';
+  const isIndividual = kind==='playerSkins' || kind==='medalistBreakdown';
+  const targetPlayer = isIndividual ? getPlayer(state.shareModal.playerId) : null;
+  const emails = isIndividual ? [targetPlayer.email].filter(Boolean) : state.players.map(p=>p.email).filter(Boolean);
+  const phones = isIndividual ? [targetPlayer.phone].filter(Boolean) : state.players.map(p=>p.phone).filter(Boolean);
+  const hasImage = !!state.shareModal.imageDataUrl;
+  let title, subject, shareTitle;
+  if(isRules){ title='Send Rules'; subject='Bandon Cup — Format & Rules'; shareTitle='Bandon Cup Rules'; }
+  else if(kind==='playerSkins'){ title=`${targetPlayer.name}'s Skins Breakdown`; subject=`Bandon Cup — ${targetPlayer.name}'s Skins Breakdown`; shareTitle=title; }
+  else if(kind==='medalistBreakdown'){ title=`${targetPlayer.name}'s Medalist Breakdown`; subject=`Bandon Cup — ${targetPlayer.name}'s Medalist Breakdown`; shareTitle=title; }
+  else if(kind==='roundBreakdown'){ const rc=getRound(state.shareModal.roundId); title=`${rc.course} — How the Point Was Won`; subject=`Bandon Cup — ${rc.course} Breakdown`; shareTitle=title; }
+  else if(kind==='teamReveal'){ title='Send Team Reveal'; subject='Bandon Cup — The Teams Are Set!'; shareTitle='The Bandon Cup — Teams'; }
+  else if(kind==='tiebreaker'){ title='Send Tie-Breaker Result'; subject='Bandon Cup — Tie-Breaker Result!'; shareTitle='The Bandon Cup — Tie-Breaker'; }
+  else { title='Send Update'; subject='Bandon Cup Update'; shareTitle='Bandon Cup Update'; }
+  const emailLabel = isIndividual ? `Email ${targetPlayer.name}` : 'Email everyone';
+  const textLabel = isIndividual ? `Text ${targetPlayer.name}` : 'Text everyone';
+  el.innerHTML = `<div class="modal-card">
+    <div class="flex between" style="margin-bottom:6px;"><strong style="font-family:var(--font-display); font-size:17px;">${title}</strong><button class="btn secondary small" id="shareModalClose" type="button">&times;</button></div>
+    <p class="muted" style="margin:0 0 10px;">Tap Share to hand this off to your phone's share sheet (Messages, Gmail, WhatsApp, whatever you pick) &mdash; nothing sends automatically from here.</p>
+    ${hasImage ? `<img src="${state.shareModal.imageDataUrl}" style="width:100%; border-radius:10px; border:1px solid var(--line); margin-bottom:10px; display:block;" alt="Bandon Cup graphic" />
+      <button class="btn gold" id="shareImageBtn" style="width:100%;">&#128248; Share as Image</button>
+      <button class="btn secondary small" id="downloadImageBtn" style="width:100%; margin-top:8px;">Save image to phone</button>` : `<p class="warn">Couldn't generate the graphic this time &mdash; use plain text below instead.</p>`}
+    <details class="collapsible" style="margin-top:14px;">
+      <summary>Or send as plain text instead</summary>
+      <textarea id="shareText" style="min-height:200px; margin-top:6px;">${state.shareModal.text}</textarea>
+      <div class="flex gap8" style="margin-top:10px;">
+        <button class="btn" id="sendEmailBtn" style="flex:1;" ${emails.length?'':'disabled'}>${emailLabel}${!isIndividual && emails.length?' ('+emails.length+')':''}</button>
+        <button class="btn" id="sendTextBtn" style="flex:1;" ${phones.length?'':'disabled'}>${textLabel}${!isIndividual && phones.length?' ('+phones.length+')':''}</button>
+      </div>
+    </details>
+    ${(!emails.length && !phones.length) ? `<p class="warn" style="margin-top:10px;">${isIndividual ? `Add ${targetPlayer.name}'s email/phone on the Players tab first (unlock, then fill it in).` : 'Add player emails/phones on the Players tab first (unlock, then fill them in) to enable direct sending.'}</p>` : ''}
+  </div>`;
+  document.getElementById('shareModalClose').onclick = closeShareModal;
+
+  const shareImageBtn = document.getElementById('shareImageBtn');
+  if(shareImageBtn) shareImageBtn.onclick = ()=>{
+    state.shareModal.canvas.toBlob(async (blob)=>{
+      if(!blob){ showToast('Could not generate image'); return; }
+      const file = new File([blob], 'bandon-cup-update.png', { type:'image/png' });
+      if(navigator.canShare && navigator.canShare({ files:[file] })){
+        try{ await navigator.share({ files:[file], title:shareTitle, text:'From the Bandon Cup app!' }); }
+        catch(e){ if(e && e.name!=='AbortError') showToast('Share cancelled or not available'); }
+      } else {
+        showToast("Your browser can't share images directly — tap \"Save image to phone\" instead, then attach it manually");
+      }
+    }, 'image/png');
+  };
+  const downloadImageBtn = document.getElementById('downloadImageBtn');
+  if(downloadImageBtn) downloadImageBtn.onclick = ()=>{
+    const a = document.createElement('a');
+    a.href = state.shareModal.imageDataUrl;
+    a.download = 'bandon-cup-update.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    showToast('Image saved — attach it to a text or email');
+  };
+  const emailBtn = document.getElementById('sendEmailBtn');
+  if(emailBtn) emailBtn.onclick = ()=>{
+    const text = document.getElementById('shareText').value;
+    window.location.href = `mailto:${emails.join(',')}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+  };
+  const textBtn = document.getElementById('sendTextBtn');
+  if(textBtn) textBtn.onclick = ()=>{
+    const text = document.getElementById('shareText').value;
+    window.location.href = `sms:${phones.join(',')}?body=${encodeURIComponent(text)}`;
+  };
+}
+
+
+/* ---------------- EVENT HANDLING ---------------- */
+function attachHandlers(){
+  document.querySelectorAll('#tabbar button').forEach(b=>{
+    b.onclick = ()=>{ state.tab = b.dataset.tab; state.activeRoundId=null; state.activePlayerId=null; state.activeHoleIndex=null; render(); };
+  });
+  document.querySelectorAll('input[data-player][data-field]').forEach(inp=>{
+    inp.onchange = (e)=>{
+      if(state.locked) return;
+      const pid = e.target.dataset.player; const field = e.target.dataset.field; const pl = getPlayer(pid);
+      if(field==='index'){
+        const val = parseFloat(e.target.value); if(isNaN(val)) return;
+        if(val !== pl.index){
+          pl.indexHistory.push({ date: new Date().toISOString().slice(0,10), oldIndex: pl.index, newIndex: val }); if(pl.indexHistory.length>8) pl.indexHistory = pl.indexHistory.slice(-8);
+          logEvent('handicap', `Handicap Index — ${pl.name}: ${pl.index} → ${val}`, {playerId:pid});
+        }
+        pl.index = val; showToast('Handicap index updated');
+      } else { pl[field] = e.target.value; }
+      savePlayers(); render();
+    };
+  });
+  document.querySelectorAll('select[data-player][data-field="preferredTee"]').forEach(sel=>{
+    sel.onchange = (e)=>{
+      if(state.locked) return;
+      const pl = getPlayer(e.target.dataset.player); const before = pl.preferredTee; const after = e.target.value;
+      pl.preferredTee = after; savePlayers(); showToast('Preferred tee updated');
+      if(after!==before) logEvent('tee', `Preferred tee — ${pl.name}: ${before} → ${after}`, {playerId:pl.id});
+    };
+  });
+  const changePinBtn = document.getElementById('changePinBtn');
+  if(changePinBtn) changePinBtn.onclick = changePin;
+  const handicapCheckBtn = document.getElementById('handicapCheckBtn');
+  if(handicapCheckBtn) handicapCheckBtn.onclick = openHandicapModal;
+  const assignFairTeamsBtn = document.getElementById('assignFairTeamsBtn');
+  if(assignFairTeamsBtn) assignFairTeamsBtn.onclick = startFairTeamAssignment;
+  const viewTeamRevealBtn = document.getElementById('viewTeamRevealBtn');
+  if(viewTeamRevealBtn) viewTeamRevealBtn.onclick = ()=> openShareModal('teamReveal');
+  const sendRulesBtn = document.getElementById('sendRulesBtn');
+  if(sendRulesBtn) sendRulesBtn.onclick = ()=> openShareModal('rules');
+  const sendTiebreakerBtn = document.getElementById('sendTiebreakerBtn');
+  if(sendTiebreakerBtn) sendTiebreakerBtn.onclick = ()=> openShareModal('tiebreaker');
+  document.querySelectorAll('[data-open-player-skins]').forEach(el=>{
+    el.onclick = ()=> openShareModal('playerSkins', el.dataset.openPlayerSkins);
+  });
+  document.querySelectorAll('[data-open-round-breakdown]').forEach(el=>{
+    el.onclick = ()=> openShareModal('roundBreakdown', el.dataset.openRoundBreakdown);
+  });
+  document.querySelectorAll('[data-open-medalist]').forEach(el=>{
+    el.onclick = ()=> openShareModal('medalistBreakdown', el.dataset.openMedalist);
+  });
+  const resetBtn = document.getElementById('resetBtn');
+  if(resetBtn) resetBtn.onclick = ()=>{
+    if(state.locked) return;
+    if(!confirm('Reset all players, rounds, and scores back to defaults? This cannot be undone.')) return;
+    state.players = defaultPlayers(); state.rounds = defaultRounds(); state.scores = {};
+    state.teamsFinalized = false; lsSet(LS_KEYS.teamsFinalized, false);
+    savePlayers(); saveRounds(); saveScores();
+    logEvent('reset', 'FULL DATA RESET — all players, rounds, and scores restored to defaults; teams unlocked');
+    render();
+  };
+  document.querySelectorAll('.round-list-item[data-round]').forEach(el=>{
+    el.onclick = ()=>{ state.activeRoundId = el.dataset.round; state.activePlayerId=null; state.activeHoleIndex=null; render(); };
+  });
+  const backBtn = document.getElementById('backToRounds'); if(backBtn) backBtn.onclick = ()=>{ state.activeRoundId=null; state.activePlayerId=null; state.activeHoleIndex=null; render(); };
+  const openImportBtn = document.getElementById('openImportBtn');
+  if(openImportBtn) openImportBtn.onclick = ()=> openImportModal(openImportBtn.dataset.round);
+  const backBtn2 = document.getElementById('backToRoundDetail'); if(backBtn2) backBtn2.onclick = ()=>{ state.activePlayerId=null; state.activeHoleIndex=null; render(); };
+  document.querySelectorAll('input[data-rfield]').forEach(inp=>{
+    inp.onchange = (e)=>{
+      if(state.locked) return;
+      const rid = e.target.dataset.round; const field = e.target.dataset.rfield; const rc = getRound(rid);
+      if(field==='holePars'){
+        const arr = e.target.value.split(',').map(x=>parseInt(x.trim(),10));
+        if(arr.length===rc.holes && arr.every(x=>!isNaN(x))){ rc.holePars = arr; rc.par = arr.reduce((a,b)=>a+b,0); logEvent('other', `Hole pars changed — ${rc.course}`, {roundId:rid}); } else showToast(`Need exactly ${rc.holes} numbers`);
+      } else if(field==='strokeIndex'){
+        const arr = e.target.value.split(',').map(x=>parseInt(x.trim(),10));
+        if(arr.length===rc.holes && arr.every(x=>!isNaN(x))){ rc.strokeIndex = arr; logEvent('other', `Stroke index changed — ${rc.course}`, {roundId:rid}); } else showToast(`Need exactly ${rc.holes} numbers`);
+      } else if(field==='holes'){
+        const n = parseInt(e.target.value,10);
+        if(n>0 && n<=25){ rc.holes = n; rc.holePars = defaultHolePars(n, rc.par || n*3); rc.strokeIndex = defaultStrokeIndex(n); logEvent('other', `Hole count changed — ${rc.course}: → ${n}`, {roundId:rid}); }
+      } else if(field==='buyIn'){
+        const n = parseFloat(e.target.value);
+        if(!isNaN(n) && n>=0){ const before = rc.buyIn; rc.buyIn = n; if(n!==before) logEvent('buyin', `Buy-in — ${rc.course}: $${before} → $${n}`, {roundId:rid}); }
+      }
+      saveRounds(); render();
+    };
+  });
+  document.querySelectorAll('input[data-teefield]').forEach(inp=>{
+    inp.onchange = (e)=>{
+      if(state.locked) return;
+      const rid = e.target.dataset.round; const idx = parseInt(e.target.dataset.teeIdx,10); const field = e.target.dataset.teefield; const rc = getRound(rid);
+      if(field==='name') rc.tees[idx].name = e.target.value; else rc.tees[idx][field] = parseFloat(e.target.value);
+      saveRounds(); render();
+    };
+  });
+  document.querySelectorAll('[data-add-tee]').forEach(btn=>{
+    btn.onclick = ()=>{ if(state.locked) return; const rc = getRound(btn.dataset.addTee); rc.tees.push({ name:'New', rating:rc.par, slope:113 }); saveRounds(); render(); };
+  });
+  document.querySelectorAll('[data-remove-tee]').forEach(btn=>{
+    btn.onclick = ()=>{
+      if(state.locked) return;
+      const [rid, idxStr] = btn.dataset.removeTee.split(':'); const rc = getRound(rid);
+      if(rc.tees.length<=1){ showToast('Keep at least one tee'); return; }
+      rc.tees.splice(parseInt(idxStr,10),1); saveRounds(); render();
+    };
+  });
+  document.querySelectorAll('[data-open-player]').forEach(el=>{
+    el.onclick = ()=>{ state.activePlayerId = el.dataset.openPlayer; render(); maybeAutoOpenTeeModal(state.activeRoundId, state.activePlayerId); };
+  });
+  document.querySelectorAll('[data-open-hole]').forEach(el=>{
+    el.onclick = ()=>{ state.activeHoleIndex = parseInt(el.dataset.openHole,10); render(); };
+  });
+  const finBtn = document.getElementById('finalizeBtn');
+  if(finBtn) finBtn.onclick = ()=>{
+    if(state.locked) return;
+    const rid = finBtn.dataset.round; const s = ensureRoundScoreObj(rid);
+    if(!s.finalized){
+      const snap = {};
+      state.players.forEach(p=>{
+        const pl = getPlayer(p.id); const rc = getRound(rid);
+        const teeName = getSelectedTeeName(rid, p.id); const tee = getTeeObj(rc, teeName);
+        snap[p.id] = { indexUsed: pl.index, teeName, rating: tee.rating, slope: tee.slope, ch: courseHandicap(pl.index, tee.slope, tee.rating, rc.par) };
+      });
+      s.snapshot = snap; s.finalized = true; showToast('Round finalized — handicaps locked in');
+      const rc2 = getRound(rid);
+      const chList = state.players.map(p=>`${p.name} CH${snap[p.id].ch}(${snap[p.id].teeName})`).join(', ');
+      logEvent('finalize', `Finalized — ${rc2.course}: ${chList}`, {roundId:rid});
+    } else {
+      s.finalized = false; showToast('Round unlocked for edits');
+      logEvent('finalize', `Unfinalized (reopened for edits) — ${getRound(rid).course}`, {roundId:rid});
+    }
+    saveScores(); render();
+  };
+  document.querySelectorAll('.scoreBtn').forEach(btn=>{
+    btn.onclick = ()=>{
+      if(state.locked) return;
+      const rid = btn.dataset.round; const pid = btn.dataset.player; const hi = parseInt(btn.dataset.hole,10); const valAttr = btn.dataset.val;
+      const s = ensureRoundScoreObj(rid);
+      if(!s.holes[pid]) s.holes[pid] = Array(getRound(rid).holes).fill(null);
+      const before = s.holes[pid][hi];
+      let justSet = false;
+      if(valAttr==='more'){
+        const current = s.holes[pid][hi];
+        const entered = prompt('Enter score for hole '+(hi+1)+':', current!==null?current:'');
+        if(entered===null) return;
+        const n = parseInt(entered,10); if(!isNaN(n) && n>0){ s.holes[pid][hi] = n; justSet = true; }
+      } else {
+        const n = parseInt(valAttr,10);
+        const wasEmpty = s.holes[pid][hi]===null || s.holes[pid][hi]===undefined;
+        s.holes[pid][hi] = (s.holes[pid][hi]===n) ? null : n;
+        justSet = wasEmpty && s.holes[pid][hi]===n;
+      }
+      const after = s.holes[pid][hi];
+      if(after!==before){
+        const rc = getRound(rid), pl = getPlayer(pid);
+        logEvent('score', `Score — ${pl.name} — ${rc.course} Hole ${hi+1}: ${before===null||before===undefined?'—':before} → ${after===null||after===undefined?'—':after}`, {playerId:pid, roundId:rid});
+      }
+      saveScores(); render();
+      if(justSet) scrollToNextUnfilledHole(rid, pid);
+    };
+  });
+  const teeSelect = document.getElementById('teeSelect');
+  if(teeSelect) teeSelect.onchange = (e)=>{
+    if(state.locked) return;
+    const s = ensureRoundScoreObj(state.activeRoundId);
+    const before = s.playerTee[state.activePlayerId]; const after = e.target.value;
+    s.playerTee[state.activePlayerId] = after; saveScores(); render();
+    if(after!==before){
+      const rc = getRound(state.activeRoundId), pl = getPlayer(state.activePlayerId);
+      logEvent('roundtee', `Round tee — ${pl.name} at ${rc.course}: ${before||'(default)'} → ${after}`, {playerId:pl.id, roundId:rc.id});
+    }
+  };
+  const openTeeBtn = document.getElementById('openTeeModalBtn');
+  if(openTeeBtn) openTeeBtn.onclick = ()=> openTeeModal(state.activeRoundId, state.activePlayerId);
+  const finishBtn = document.getElementById('finishEntryBtn');
+  if(finishBtn) finishBtn.onclick = ()=>{
+    const rid = finishBtn.dataset.round, pid = finishBtn.dataset.player;
+    const rc = getRound(rid);
+    const holes = getPlayerHoles(rid, pid);
+    const missing = [];
+    holes.forEach((h,i)=>{ if(h===null||h===undefined||h==='') missing.push(i+1); });
+    if(missing.length){
+      alert(`Hold on — missing score${missing.length>1?'s':''} for hole${missing.length>1?'s':''}: ${missing.join(', ')}. Please fill ${missing.length>1?'those':'that'} in before finishing.`);
+      const el = document.querySelector(`.hole-block[data-hole-index="${missing[0]-1}"]`);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+    state.activePlayerId = null;
+    render();
+    showToast(`${getPlayer(pid).name}'s scorecard complete — back to round overview`);
+  };
+  const resetScoresBtn = document.getElementById('resetScoresBtn');
+  if(resetScoresBtn) resetScoresBtn.onclick = ()=>{
+    if(state.locked) return;
+    const rid = resetScoresBtn.dataset.round, pid = resetScoresBtn.dataset.player;
+    const rc = getRound(rid), pl = getPlayer(pid);
+    if(!confirm(`Reset all of ${pl.name}'s scores for ${rc.course}? This can't be undone.`)) return;
+    const s = ensureRoundScoreObj(rid);
+    s.holes[pid] = Array(rc.holes).fill(null);
+    saveScores(); render();
+    showToast('Scores reset to default');
+    logEvent('reset', `All scores reset — ${pl.name} — ${rc.course}`, {playerId:pid, roundId:rid});
+  };
+
+  // short-course category buttons (Birdie/Par/Bogey+)
+  document.querySelectorAll('[data-cat-btn]').forEach(btn=>{
+    btn.onclick = ()=>{
+      if(state.locked) return;
+      const rid = btn.dataset.round, pid = btn.dataset.player, hi = parseInt(btn.dataset.hole,10), cat = btn.dataset.cat;
+      const s = ensureRoundScoreObj(rid);
+      if(!s.holes[pid]) s.holes[pid] = Array(getRound(rid).holes).fill(null);
+      const before = s.holes[pid][hi];
+      s.holes[pid][hi] = (s.holes[pid][hi]===cat) ? null : cat;
+      delete s.ctpWinners[hi]; // category change invalidates any prior CTP call for this hole
+      const after = s.holes[pid][hi];
+      if(after!==before){
+        const rc = getRound(rid), pl = getPlayer(pid);
+        logEvent('score', `Score — ${pl.name} — ${rc.course} Hole ${hi+1}: ${before||'—'} → ${after||'—'}`, {playerId:pid, roundId:rid});
+      }
+      saveScores(); render();
+    };
+  });
+  // closest-to-pin buttons
+  document.querySelectorAll('[data-ctp-btn]').forEach(btn=>{
+    btn.onclick = ()=>{
+      if(state.locked) return;
+      const rid = btn.dataset.round, hi = parseInt(btn.dataset.hole,10), pid = btn.dataset.player;
+      const s = ensureRoundScoreObj(rid);
+      const before = s.ctpWinners[hi];
+      s.ctpWinners[hi] = (s.ctpWinners[hi]===pid) ? null : pid;
+      const after = s.ctpWinners[hi];
+      if(after!==before){
+        const rc = getRound(rid);
+        const beforeName = before ? (getPlayer(before)||{}).name : '—';
+        const afterName = after ? (getPlayer(after)||{}).name : '—';
+        logEvent('ctp', `Closest-to-pin — ${rc.course} Hole ${hi+1}: ${beforeName} → ${afterName}`, {playerId:pid, roundId:rid});
+      }
+      saveScores(); render();
+    };
+  });
+  const resetHoleBtn = document.getElementById('resetHoleBtn');
+  if(resetHoleBtn) resetHoleBtn.onclick = ()=>{
+    if(state.locked) return;
+    const rid = resetHoleBtn.dataset.round, hi = parseInt(resetHoleBtn.dataset.hole,10);
+    const rc = getRound(rid);
+    if(!confirm(`Reset all entries for Hole ${hi+1} on ${rc.course}? This can't be undone.`)) return;
+    const s = ensureRoundScoreObj(rid);
+    state.players.forEach(p=>{ if(!s.holes[p.id]) s.holes[p.id] = Array(rc.holes).fill(null); s.holes[p.id][hi] = null; });
+    delete s.ctpWinners[hi];
+    saveScores(); render();
+    showToast('Hole reset');
+    logEvent('reset', `Hole reset — ${rc.course} Hole ${hi+1} (all players)`, {roundId:rid});
+  };
+  const prevHoleBtn = document.getElementById('prevHoleBtn');
+  if(prevHoleBtn) prevHoleBtn.onclick = ()=>{ if(state.activeHoleIndex>0){ state.activeHoleIndex -= 1; render(); } };
+  const nextHoleBtn = document.getElementById('nextHoleBtn');
+  if(nextHoleBtn) nextHoleBtn.onclick = ()=>{
+    const rc = getRound(state.activeRoundId);
+    if(state.activeHoleIndex < rc.holes-1){ state.activeHoleIndex += 1; render(); }
+    else { state.activeHoleIndex = null; render(); showToast('Nice work — back to hole overview'); }
+  };
+}
+function scrollToNextUnfilledHole(roundId, playerId){
+  const holes = getPlayerHoles(roundId, playerId);
+  const idx = holes.findIndex(h=>h===null||h===undefined||h==='');
+  if(idx===-1) return;
+  const el = document.querySelector(`.hole-block[data-hole-index="${idx}"]`);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+}
+function maybeAutoOpenTeeModal(roundId, playerId){
+  const rc = getRound(roundId);
+  if(rc.type!=='full' || !rc.tees || rc.tees.length<2 || state.locked) return;
+  const s = ensureRoundScoreObj(roundId);
+  const holes = getPlayerHoles(roundId, playerId);
+  const started = holes.some(h=>h!==null);
+  const seen = s.teeRecSeen[playerId];
+  if(!started && !seen){ s.teeRecSeen[playerId] = true; saveScores(); openTeeModal(roundId, playerId); }
+}
+
+/* ---------------- INIT ---------------- */
+function init(){
+  const params = new URLSearchParams(window.location.search);
+  const viewBlobId = params.get('view');
+  if(viewBlobId){
+    state.viewOnlyMode = true;
+    state.viewBlobId = viewBlobId;
+    state.locked = true;
+    state.players = defaultPlayers();
+    state.rounds = defaultRounds();
+    state.scores = {};
+    state.auditLog = [];
+    applyTextScale();
+    loadRemoteForViewer();
+    startUpdatePolling();
+  } else {
+    loadState();
+    applyTextScale();
+    document.getElementById('loadingScreen').style.display = 'none';
+    render();
+    if(!state.storageOk){
+      showToast('Warning: this browser is blocking local storage — entries may not save');
+    }
+  }
+}
+init();
+</script>
+</body>
+</html>
